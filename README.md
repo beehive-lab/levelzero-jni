@@ -3,7 +3,7 @@
 ###### 1) Install Level-Zero
 
 
-Note: Using commit `00831391a9d9bae6185e0b66bc01f6cdb8cc9edb` from `level-zero` 
+Note: Using commit `0d30b1fa712253c68bfdfa3863d380df4301b8a4` from `level-zero` 
 
 
 ```bash
