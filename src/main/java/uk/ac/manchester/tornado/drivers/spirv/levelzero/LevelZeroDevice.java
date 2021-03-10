@@ -4,13 +4,15 @@ import java.util.stream.IntStream;
 
 public class LevelZeroDevice {
 
-    private ZeDriverHandle driver;
+    private LevelZeroDriver driver;
+    private ZeDriverHandle driverHandle;
     private int deviceIndex;
     private long deviceHandlerPtr;
     private ZeDeviceProperties deviceProperties;
 
-    public LevelZeroDevice(ZeDriverHandle driver, int deviceIndex, long deviceHandlerPointer) {
+    public LevelZeroDevice(LevelZeroDriver driver, ZeDriverHandle driverHandler, int deviceIndex, long deviceHandlerPointer) {
         this.driver = driver;
+        this.driverHandle = driverHandler;
         this.deviceIndex = deviceIndex;
         this.deviceHandlerPtr = deviceHandlerPointer;
     }
@@ -44,7 +46,7 @@ public class LevelZeroDevice {
     public int zeDeviceGetMemoryProperties(long deviceHandlerPtr, int[] memoryCount, ZeMemoryProperties[] memoryProperties) {
         if (memoryProperties != null) {
             // Initialize properties
-            IntStream.range(0, memoryCount[0]).forEach(i-> memoryProperties[i] = new ZeMemoryProperties());
+            IntStream.range(0, memoryCount[0]).forEach(i -> memoryProperties[i] = new ZeMemoryProperties());
         }
         int result = zeDeviceGetMemoryProperties_native(deviceHandlerPtr, memoryCount, memoryProperties);
         return result;
@@ -57,7 +59,7 @@ public class LevelZeroDevice {
     public int zeDeviceGetCacheProperties(long deviceHandlerPtr, int[] cacheCount, ZeDeviceCacheProperties[] cacheProperties) {
         if (cacheProperties != null) {
             // Initialize properties
-            IntStream.range(0, cacheCount[0]).forEach(i-> cacheProperties[i] = new ZeDeviceCacheProperties());
+            IntStream.range(0, cacheCount[0]).forEach(i -> cacheProperties[i] = new ZeDeviceCacheProperties());
         }
         return zeDeviceGetCacheProperties_native(deviceHandlerPtr, cacheCount, cacheProperties);
     }
@@ -67,8 +69,28 @@ public class LevelZeroDevice {
     public int zeDeviceGetCommandQueueGroupProperties(long deviceHandlerPtr, int[] numQueueGroups, ZeCommandQueueGroupProperties[] commandQueueGroupProperties) {
         if (commandQueueGroupProperties != null) {
             // Initialize properties
-            IntStream.range(0, numQueueGroups[0]).forEach(i-> commandQueueGroupProperties[i] = new ZeCommandQueueGroupProperties());
+            IntStream.range(0, numQueueGroups[0]).forEach(i -> commandQueueGroupProperties[i] = new ZeCommandQueueGroupProperties());
         }
         return zeDeviceGetCommandQueueGroupProperties_native(deviceHandlerPtr, numQueueGroups, commandQueueGroupProperties);
     }
+
+    public String getDeviceExtensions() {
+        return null;
+    }
+
+    public LevelZeroDriver getDriver() {
+        return this.driver;
+    }
+
+    public ZeDriverHandle getDriverHandler() {
+        return this.driverHandle;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SPIRV LEVELZERO Device");
+        return sb.toString();
+    }
+
 }

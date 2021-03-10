@@ -1,53 +1,32 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDevice;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDriver;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueDescription;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueListHandle;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDesc;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventDescription;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventHandle;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolDescription;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolFlags;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolHandle;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventScopeFlags;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeResult;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.*;
 
 public class TestWithEvents {
-
-    private static void errorLog(String method, int result) {
-        if (result != ZeResult.ZE_RESULT_SUCCESS) {
-            System.out.println("Error " + method);
-        }
-    }
 
     public static void main(String[] args) {
         // Create the Level Zero Driver
         LevelZeroDriver driver = new LevelZeroDriver();
         int result = driver.zeInit(ZeInitFlag.ZE_INIT_FLAG_GPU_ONLY);
-        errorLog("zeInit", result);
+        LevelZeroUtils.errorLog("zeInit", result);
 
         int[] numDrivers = new int[1];
         result = driver.zeDriverGet(numDrivers, null);
-        errorLog("zeDriverGet", result);
+        LevelZeroUtils.errorLog("zeDriverGet", result);
 
         ZeDriverHandle driverHandler = new ZeDriverHandle(numDrivers[0]);
         result = driver.zeDriverGet(numDrivers, driverHandler);
-        errorLog("zeDriverGet", result);
+        LevelZeroUtils.errorLog("zeDriverGet", result);
 
         // Get number of devices in a driver
         int[] deviceCount = new int[1];
         result = driver.zeDeviceGet(driverHandler, 0, deviceCount, null);
-        errorLog("zeDeviceGet", result);
+        LevelZeroUtils.errorLog("zeDeviceGet", result);
 
         // Instantiate a device Handler
         ZeDevicesHandle deviceHandler = new ZeDevicesHandle(deviceCount[0]);
         result = driver.zeDeviceGet(driverHandler, 0, deviceCount, deviceHandler);
-        errorLog("zeDeviceGet", result);
+        LevelZeroUtils.errorLog("zeDeviceGet", result);
 
         // ============================================
         // Create the Context
@@ -57,8 +36,8 @@ public class TestWithEvents {
         // Create context object
         LevelZeroContext context = new LevelZeroContext(driverHandler, contextDescription);
         // Call native method for creating the context
-        result = context.zeContextCreate_native(driverHandler.getZe_driver_handle_t_ptr()[0], 0);
-        errorLog("zeContextCreate", result);
+        result = context.zeContextCreate(driverHandler.getZe_driver_handle_t_ptr()[0], 0);
+        LevelZeroUtils.errorLog("zeContextCreate", result);
 
         // ============================================
         // Create device
@@ -68,7 +47,7 @@ public class TestWithEvents {
         ZeCommandQueueDescription commandQueueDescription = new ZeCommandQueueDescription();
         ZeCommandQueueListHandle commandList = new ZeCommandQueueListHandle();
         result = context.zeCommandListCreateImmediate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), commandQueueDescription, commandList);
-        errorLog("zeCommandListCreateImmediate", result);
+        LevelZeroUtils.errorLog("zeCommandListCreateImmediate", result);
 
         ZeEventPoolDescription eventPoolDesc = new ZeEventPoolDescription();
         eventPoolDesc.setCount(1);
@@ -81,25 +60,24 @@ public class TestWithEvents {
         ZeEventPoolHandle eventPool = new ZeEventPoolHandle();
         int numDevices = 1;
         result = context.zeEventPoolCreate(context.getDefaultContextPtr(), eventPoolDesc, numDevices, device.getDeviceHandlerPtr(), eventPool);
-        errorLog("zeEventPoolCreate", result);
+        LevelZeroUtils.errorLog("zeEventPoolCreate", result);
 
         // The following call cases a problem (SEG FAULT) in level-zero.
-        // I suspect I need to pass the device pointer, rather than a copy of the device.
-        //result = context.zeEventCreate(eventPool, eventDescription, event);
-        //errorLog("zeEventCreate", result);
+        // I suspect I need to pass the device pointer, rather than a copy of the
+        // device.
+        // result = context.zeEventCreate(eventPool, eventDescription, event);
+        // errorLog("zeEventCreate", result);
 
         result = context.zeCommandListDestroy(commandList);
-        errorLog("zeCommandListDestroy", result);
+        LevelZeroUtils.errorLog("zeCommandListDestroy", result);
 
-        //result = context.zeEventPoolDestroy(eventPool);
-        //errorLog("zeEventPoolDestroy", result);
+        // result = context.zeEventPoolDestroy(eventPool);
+        // errorLog("zeEventPoolDestroy", result);
 
         result = context.zeEventDestroy(event);
-        errorLog("zeEventDestroy", result);
+        LevelZeroUtils.errorLog("zeEventDestroy", result);
 
         result = driver.zeContextDestroy(context);
-        errorLog("zeContextDestroy", result);
-
+        LevelZeroUtils.errorLog("zeContextDestroy", result);
     }
-
 }

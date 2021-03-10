@@ -7,14 +7,9 @@ public class LevelZeroContext {
     ZeContextHandle contextHandle;
     ZeContextDesc contextDescription;
 
-    static {
-        // Use -Djava.library.path=./levelZeroLib/build/
-        System.loadLibrary("tornado-levelzero");
-    }
-
     native int zeContextCreate(long driverHandler, ZeContextDesc contextDescriptionPtr, long[] contextPtr);
 
-    public int zeContextCreate_native(long driverHandler, int indexDriverHandler) {
+    public int zeContextCreate(long driverHandler, int indexDriverHandler) {
         long[] contextPointers = new long[1];
         int status = zeContextCreate(driverHandler, contextDescription, contextPointers);
         this.contextHandle = new ZeContextHandle(contextPointers);
@@ -52,10 +47,26 @@ public class LevelZeroContext {
         return zeCommandListCreateImmediate_native(contextPtr, deviceHandlerPtr, commandQueueDescription, commandList);
     }
 
-    native int zeMemAllocShared_native(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr, LevelZeroBufferInteger buffer);
+    native int zeMemAllocShared_native(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr,
+            LevelZeroBufferInteger buffer);
 
-    public int zeMemAllocShared(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr, LevelZeroBufferInteger buffer) {
-        return zeMemAllocShared_native(contextPtr, deviceMemAllocDesc,  hostMemAllocDesc,  bufferSize,  alignment,  deviceHandlerPtr,  buffer);
+    native int zeMemAllocShared_nativeByte(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr,
+            LevelZeroByteBuffer buffer);
+
+    public int zeMemAllocShared(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr,
+            LevelZeroBufferInteger buffer) {
+        return zeMemAllocShared_native(contextPtr, deviceMemAllocDesc, hostMemAllocDesc, bufferSize, alignment, deviceHandlerPtr, buffer);
+    }
+
+    public int zeMemAllocShared(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, ZeHostMemAllocDesc hostMemAllocDesc, int bufferSize, int alignment, long deviceHandlerPtr,
+            LevelZeroByteBuffer buffer) {
+        return zeMemAllocShared_nativeByte(contextPtr, deviceMemAllocDesc, hostMemAllocDesc, bufferSize, alignment, deviceHandlerPtr, buffer);
+    }
+
+    native int zeMemAllocDevice_native(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, int allocSize, int alignment, long deviceHandlerPtr, LevelZeroByteBuffer deviceBuffer);
+
+    public int zeMemAllocDevice(long contextPtr, ZeDeviceMemAllocDesc deviceMemAllocDesc, int allocSize, int alignment, long deviceHandlerPtr, LevelZeroByteBuffer deviceBuffer) {
+        return zeMemAllocDevice_native(contextPtr, deviceMemAllocDesc, allocSize, alignment, deviceHandlerPtr, deviceBuffer);
     }
 
     native int zeModuleCreate_native(long contextPtr, long deviceHandlerPtr, LevelZeroBinaryModule binaryModule, ZeModuleDesc moduleDesc, ZeModuleHandle module, ZeBuildLogHandle buildLog);
@@ -129,4 +140,5 @@ public class LevelZeroContext {
         event.initPtr();
         return result;
     }
+
 }
