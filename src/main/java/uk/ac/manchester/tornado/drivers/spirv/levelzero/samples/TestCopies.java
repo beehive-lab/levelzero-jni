@@ -2,6 +2,8 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.*;
 
+import java.util.Arrays;
+
 public class TestCopies {
 
     public static LevelZeroContext zeInitContext(LevelZeroDriver driver) {
@@ -76,7 +78,7 @@ public class TestCopies {
         return ordinal;
     }
 
-    public static ZeCommandQueueHandle createCommandQueue(LevelZeroContext context, LevelZeroDevice device) {
+    public static LevelZeroCommandQueue createCommandQueue(LevelZeroContext context, LevelZeroDevice device) {
         // Create Command Queue
         ZeCommandQueueDescription cmdDescriptor = new ZeCommandQueueDescription();
         cmdDescriptor.setFlags(0);
@@ -85,33 +87,32 @@ public class TestCopies {
         cmdDescriptor.setOrdinal(getCommandQueueOrdinal(device));
         cmdDescriptor.setIndex(0);
 
-        ZeCommandQueueHandle commandQueue = new ZeCommandQueueHandle();
-        int result = context.zeCommandQueueCreate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), cmdDescriptor, commandQueue);
+        ZeCommandQueueHandle zeCommandQueueHandle = new ZeCommandQueueHandle();
+        int result = context.zeCommandQueueCreate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), cmdDescriptor, zeCommandQueueHandle);
         LevelZeroUtils.errorLog("zeCommandQueueCreate", result);
-
-        return commandQueue;
+        return new LevelZeroCommandQueue(context, zeCommandQueueHandle);
     }
 
-    public static ZeCommandQueueListHandle createCommandList(LevelZeroContext context, LevelZeroDevice device) {
+    public static LevelZeroCommandList createCommandList(LevelZeroContext context, LevelZeroDevice device) {
         ZeCommandListDescription cmdListDescriptor = new ZeCommandListDescription();
         cmdListDescriptor.setFlags(0);
         cmdListDescriptor.setCommandQueueGroupOrdinal(getCommandQueueOrdinal(device));
-        ZeCommandQueueListHandle commandList = new ZeCommandQueueListHandle();
-        int result = context.zeCommandListCreate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), cmdListDescriptor, commandList);
+        ZeCommandListHandle commandListHandler = new ZeCommandListHandle();
+        int result = context.zeCommandListCreate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), cmdListDescriptor, commandListHandler);
         LevelZeroUtils.errorLog("zeCommandListCreate", result);
-        return commandList;
+        return new LevelZeroCommandList(context, commandListHandler);
     }
 
     public static boolean testAppendMemoryCopyFromHeapToDeviceToHeap(LevelZeroContext context, LevelZeroDevice device) {
 
         final int allocSize = 4096;
-        char[] heapBuffer = new char[allocSize];
+        byte[] heapBuffer = new byte[allocSize];
 
         LevelZeroByteBuffer deviceBuffer = new LevelZeroByteBuffer();
-        char[] heapBuffer2 = new char[allocSize];
+        byte[] heapBuffer2 = new byte[allocSize];
 
-        ZeCommandQueueHandle commandQueue = createCommandQueue(context, device);
-        ZeCommandQueueListHandle commandList = createCommandList(context, device);
+        LevelZeroCommandQueue commandQueue = createCommandQueue(context, device);
+        LevelZeroCommandList commandList = createCommandList(context, device);
 
         ZeDeviceMemAllocDesc deviceMemAllocDesc = new ZeDeviceMemAllocDesc();
         deviceMemAllocDesc.setOrdinal(0);
@@ -122,11 +123,191 @@ public class TestCopies {
         int result = context.zeMemAllocDevice(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), deviceBuffer);
         LevelZeroUtils.errorLog("zeMemAllocDevice", result);
 
-        return false;
+        // Initialize second buffer (Java side) to 0
+        Arrays.fill(heapBuffer2, (byte) 0);
+
+        // Fill heap buffer (Java side)
+        for (int i = 0; i < allocSize; i++) {
+            heapBuffer[i] = 'a';
+        }
+
+        // Copy from HEAP -> Device Allocated Memory
+        result = commandList.zeCommandListAppendMemoryCopy(commandList.getCommandListHandlerPtr(), deviceBuffer, heapBuffer, allocSize, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopy", result);
+        result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
+
+        // Copy From Device-Allocated memory to host (heapBuffer2)
+        result = commandList.zeCommandListAppendMemoryCopy(commandList.getCommandListHandlerPtr(), heapBuffer2, deviceBuffer, allocSize, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopy", result);
+
+        // Close the command list
+        result = commandList.zeCommandListClose(commandList.getCommandListHandlerPtr());
+        LevelZeroUtils.errorLog("zeCommandListClose", result);
+        result = commandQueue.zeCommandQueueExecuteCommandLists(commandQueue.getCommandQueueHandlerPtr(), 1, commandList.getCommandListHandler(), null);
+        LevelZeroUtils.errorLog("zeCommandQueueExecuteCommandLists", result);
+        result = commandQueue.zeCommandQueueSynchronize(commandQueue.getCommandQueueHandlerPtr(), Long.MAX_VALUE);
+        LevelZeroUtils.errorLog("zeCommandQueueSynchronize", result);
+
+        boolean isValid = true;
+        for (int i = 0; i < allocSize; i++) {
+            if (heapBuffer[i] != heapBuffer2[i]) {
+                System.out.println(heapBuffer[i] + " != " + heapBuffer2[i]);
+                isValid = false;
+                break;
+            }
+        }
+
+        // Free resources
+        context.zeMemFree(context.getDefaultContextPtr(), deviceBuffer);
+        context.zeCommandListDestroy(commandList.getCommandListHandler());
+        context.zeCommandQueueDestroy(commandQueue.getCommandQueueHandle());
+        return isValid;
+    }
+
+    /**
+     * This example creates a buffer using the zeMemHostAlloc and copies data from
+     * this buffer into the device buffer created with zeMemDeviceAlloc.
+     * 
+     * @param context
+     *            {@link LevelZeroContext}
+     * @param device
+     *            {@link LevelZeroDevice}
+     * @return True if the buffers are identical
+     */
+    public static boolean testAppendMemoryCopyFromHostToDeviceToHeap(LevelZeroContext context, LevelZeroDevice device) {
+
+        final int allocSize = 4096;
+        byte[] heapBuffer = new byte[allocSize];
+
+        LevelZeroByteBuffer hostBuffer = new LevelZeroByteBuffer();
+        LevelZeroByteBuffer deviceBuffer = new LevelZeroByteBuffer();
+
+        LevelZeroCommandQueue commandQueue = createCommandQueue(context, device);
+        LevelZeroCommandList commandList = createCommandList(context, device);
+
+        ZeMemAllocHostDesc hostMemAllocDesc = new ZeMemAllocHostDesc();
+        hostMemAllocDesc.setFlags(0);
+        int result = context.zeMemAllocHost(context.getContextHandle().getContextPtr()[0], hostMemAllocDesc, allocSize, 1, hostBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocHost", result);
+
+        ZeDeviceMemAllocDesc deviceMemAllocDesc = new ZeDeviceMemAllocDesc();
+        deviceMemAllocDesc.setOrdinal(0);
+        deviceMemAllocDesc.setFlags(0);
+        result = context.zeMemAllocDevice(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, allocSize, allocSize, device.getDeviceHandlerPtr(), deviceBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocDevice", result);
+
+        // Initialize buffers
+        byte[] initArray = new byte[allocSize];
+        Arrays.fill(initArray, (byte) 100);
+        hostBuffer.copy(initArray);
+        Arrays.fill(heapBuffer, (byte) 0);
+
+        // Copy from ze Host Allocated -> Device Allocated Memory
+        result = commandList.zeCommandListAppendMemoryCopy(commandList.getCommandListHandlerPtr(), deviceBuffer, hostBuffer, allocSize, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopy", result);
+        result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
+
+        // Copy From Device-Allocated memory to host (heapBuffer2)
+        result = commandList.zeCommandListAppendMemoryCopy(commandList.getCommandListHandlerPtr(), heapBuffer, deviceBuffer, allocSize, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopy", result);
+
+        // Close the command list
+        result = commandList.zeCommandListClose(commandList.getCommandListHandlerPtr());
+        LevelZeroUtils.errorLog("zeCommandListClose", result);
+        result = commandQueue.zeCommandQueueExecuteCommandLists(commandQueue.getCommandQueueHandlerPtr(), 1, commandList.getCommandListHandler(), null);
+        LevelZeroUtils.errorLog("zeCommandQueueExecuteCommandLists", result);
+        result = commandQueue.zeCommandQueueSynchronize(commandQueue.getCommandQueueHandlerPtr(), Long.MAX_VALUE);
+        LevelZeroUtils.errorLog("zeCommandQueueSynchronize", result);
+
+        byte[] b = hostBuffer.getByteBuffer();
+        boolean isValid = true;
+        for (int i = 0; i < allocSize; i++) {
+            if (heapBuffer[i] != b[i]) {
+                System.out.println(heapBuffer[i] + " != " + b[i]);
+                isValid = false;
+                break;
+            }
+        }
+
+        // Free resources
+        context.zeMemFree(context.getDefaultContextPtr(), hostBuffer);
+        context.zeMemFree(context.getDefaultContextPtr(), deviceBuffer);
+        context.zeCommandListDestroy(commandList.getCommandListHandler());
+        context.zeCommandQueueDestroy(commandQueue.getCommandQueueHandle());
+        return isValid;
+    }
+
+    private static boolean testAppendMemoryCopyFromHeapToSubregionDeviceToHeap(LevelZeroContext context, LevelZeroDevice device) {
+
+        // Device Buffer is 4096 Bytes
+        final int allocSize = 4096;
+        LevelZeroByteBuffer deviceBuffer = new LevelZeroByteBuffer();
+
+        // SubRegion is 1024 bytes
+        final int subRegionBuffer = 1024;
+        byte[] heapBuffer = new byte[subRegionBuffer];
+        byte[] heapBuffer2 = new byte[subRegionBuffer];
+
+        LevelZeroCommandQueue commandQueue = createCommandQueue(context, device);
+        LevelZeroCommandList commandList = createCommandList(context, device);
+
+        ZeDeviceMemAllocDesc deviceMemAllocDesc = new ZeDeviceMemAllocDesc();
+        deviceMemAllocDesc.setOrdinal(0);
+        deviceMemAllocDesc.setFlags(0);
+        int alignment = 1;
+
+        // This is the equivalent of a clCreateBuffer
+        int result = context.zeMemAllocDevice(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), deviceBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocDevice", result);
+
+        // Initialize second buffer (Java side) to 0
+        Arrays.fill(heapBuffer2, (byte) 0);
+
+        // Fill heap buffer (Java side)
+        for (int i = 0; i < subRegionBuffer; i++) {
+            heapBuffer[i] = 'a';
+        }
+
+        int deviceOffset = 1024;
+        int hostOffset = 0;
+
+        // Copy from HEAP -> Device Allocated Memory
+        result = commandList.zeCommandListAppendMemoryCopyWithOffset(commandList.getCommandListHandlerPtr(), deviceBuffer, heapBuffer, subRegionBuffer, deviceOffset, hostOffset, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopyWithOffset", result);
+        result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
+
+        // Copy From Device-Allocated memory to host (heapBuffer2)
+        result = commandList.zeCommandListAppendMemoryCopyWithOffset(commandList.getCommandListHandlerPtr(), heapBuffer2, deviceBuffer, subRegionBuffer, hostOffset, deviceOffset, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryCopy", result);
+
+        // Close the command list
+        result = commandList.zeCommandListClose(commandList.getCommandListHandlerPtr());
+        LevelZeroUtils.errorLog("zeCommandListClose", result);
+        result = commandQueue.zeCommandQueueExecuteCommandLists(commandQueue.getCommandQueueHandlerPtr(), 1, commandList.getCommandListHandler(), null);
+        LevelZeroUtils.errorLog("zeCommandQueueExecuteCommandLists", result);
+        result = commandQueue.zeCommandQueueSynchronize(commandQueue.getCommandQueueHandlerPtr(), Long.MAX_VALUE);
+        LevelZeroUtils.errorLog("zeCommandQueueSynchronize", result);
+
+        boolean isValid = true;
+        for (int i = 0; i < subRegionBuffer; i++) {
+            if (heapBuffer[i] != heapBuffer2[i]) {
+                System.out.println(heapBuffer[i] + " != " + heapBuffer2[i]);
+                isValid = false;
+                break;
+            }
+        }
+
+        // Free resources
+        context.zeMemFree(context.getDefaultContextPtr(), deviceBuffer);
+        context.zeCommandListDestroy(commandList.getCommandListHandler());
+        context.zeCommandQueueDestroy(commandQueue.getCommandQueueHandle());
+        return isValid;
     }
 
     public static void main(String[] args) {
-
         LevelZeroDriver driver = new LevelZeroDriver();
         LevelZeroContext context = zeInitContext(driver);
         LevelZeroDevice device = zeGetDevices(context, driver);
@@ -137,6 +318,11 @@ public class TestCopies {
         System.out.println("\tVendor ID: " + Integer.toHexString(deviceProperties.getVendorId()));
 
         boolean isValid = testAppendMemoryCopyFromHeapToDeviceToHeap(context, device);
-
+        if (isValid)
+            isValid = testAppendMemoryCopyFromHostToDeviceToHeap(context, device);
+        if (isValid)
+            isValid = testAppendMemoryCopyFromHeapToSubregionDeviceToHeap(context, device);
+        System.out.println("is valid? " + isValid);
     }
+
 }

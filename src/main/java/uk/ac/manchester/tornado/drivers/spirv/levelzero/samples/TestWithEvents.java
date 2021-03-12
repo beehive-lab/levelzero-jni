@@ -45,7 +45,7 @@ public class TestWithEvents {
         LevelZeroDevice device = driver.getDevice(driverHandler, 0);
 
         ZeCommandQueueDescription commandQueueDescription = new ZeCommandQueueDescription();
-        ZeCommandQueueListHandle commandList = new ZeCommandQueueListHandle();
+        ZeCommandListHandle commandList = new ZeCommandListHandle();
         result = context.zeCommandListCreateImmediate(context.getContextHandle().getContextPtr()[0], device.getDeviceHandlerPtr(), commandQueueDescription, commandList);
         LevelZeroUtils.errorLog("zeCommandListCreateImmediate", result);
 
