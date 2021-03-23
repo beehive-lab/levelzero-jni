@@ -1,6 +1,20 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.*;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDevice;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDriver;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandListHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueDescription;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDesc;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventDescription;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolDescription;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolFlags;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventScopeFlags;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
 
 public class TestWithEvents {
 
