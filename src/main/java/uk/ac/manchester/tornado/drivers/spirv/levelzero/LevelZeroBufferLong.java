@@ -1,16 +1,16 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class LevelZeroByteBuffer {
+public class LevelZeroBufferLong {
 
     private long ptrBuffer;
     private int size;
     private int alignment;
 
-    public LevelZeroByteBuffer() {
+    public LevelZeroBufferLong() {
         this.ptrBuffer = -1;
     }
 
-    public LevelZeroByteBuffer(int size, int alignment) {
+    public LevelZeroBufferLong(int size, int alignment) {
         this.size = size;
         this.alignment = alignment;
         this.ptrBuffer = -1;
@@ -28,15 +28,11 @@ public class LevelZeroByteBuffer {
         return this.alignment;
     }
 
-    public void memset(byte value, int bufferSize) {
+    public void memset(long value, int bufferSize) {
         memset_native(this, value, bufferSize);
     }
 
-    public void memset(int value, int bufferSize) {
-        memset_nativeInt(this, value, bufferSize);
-    }
-
-    public boolean isEqual(LevelZeroByteBuffer bufferB, int size) {
+    public boolean isEqual(LevelZeroBufferLong bufferB, int size) {
         return isEqual(this.ptrBuffer, bufferB.getPtrBuffer(), size);
     }
 
@@ -44,26 +40,25 @@ public class LevelZeroByteBuffer {
         this.ptrBuffer = -1;
     }
 
-    private native void memset_native(LevelZeroByteBuffer javaBuffer, byte value, int bufferSize);
-
-    private native void memset_nativeInt(LevelZeroByteBuffer javaBuffer, int value, int bufferSize);
+    private native void memset_native(LevelZeroBufferLong javaBuffer, long value, int bufferSize);
 
     private native boolean isEqual(long bufferAPtr, long bufferBPtr, int size);
 
-    private native void copy_native(long ptrBuffer, byte[] array);
+    private native void copy_native(long ptrBuffer, long[] array);
 
     /**
      * Copies the input array into the LevelZeroBuffer
-     * 
+     *
      * @param array
      */
-    public void copy(byte[] array) {
+    public void copy(long[] array) {
         copy_native(this.ptrBuffer, array);
     }
 
-    private native byte[] getByteBuffer_native(long ptrBuffer, int size);
+    private native long[] getLongBuffer_native(long ptrBuffer, int size);
 
-    public byte[] getByteBuffer() {
-        return getByteBuffer_native(this.ptrBuffer, this.size);
+    public long[] getLongBuffer() {
+        return getLongBuffer_native(this.ptrBuffer, this.size);
     }
+
 }

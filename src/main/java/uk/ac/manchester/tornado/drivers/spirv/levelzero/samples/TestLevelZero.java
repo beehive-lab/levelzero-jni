@@ -1,6 +1,5 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroBinaryModule;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroBufferInteger;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandList;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandQueue;
@@ -43,9 +42,36 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleFormat;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeResult;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 import java.io.IOException;
 
+/**
+ * Kernel to test:
+ * 
+ * <code>
+ *    __kernel void copydata(__global int* input, __global int* output) {
+ * 	         uint idx = get_global_id(0);
+ * 	         output[idx] = input[idx];
+ *    }      
+ * </code>
+ * 
+ * 
+ * To compile to SPIR-V:
+ * 
+ * <code>
+ *     $ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
+ *     $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
+ *     $ mv opencl-copy.spv /tmp/example.spv
+ * </code>
+ * 
+ * How to run?
+ * 
+ * <code>
+ *     tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
+ * </code>
+ * 
+ */
 public class TestLevelZero {
 
     // Test Program
@@ -241,17 +267,13 @@ public class TestLevelZero {
         moduleDesc.setFormat(ZeModuleFormat.ZE_MODULE_FORMAT_IL_SPIRV);
         moduleDesc.setBuildFlags("");
 
-        LevelZeroBinaryModule binaryModule = new LevelZeroBinaryModule("/tmp/example.spv");
-        result = binaryModule.readBinary();
-        LevelZeroUtils.errorLog("readBinary", result);
-
-        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), binaryModule, moduleDesc, module, buildLog);
+        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "/tmp/opencl-copy.spv");
         LevelZeroUtils.errorLog("zeModuleCreate", result);
 
         if (result != ZeResult.ZE_RESULT_SUCCESS) {
             // Print Logs
             int[] sizeLog = new int[1];
-            String errorMessage = new String();
+            String errorMessage = "";
             result = context.zeModuleBuildLogGetString(buildLog, sizeLog, errorMessage);
             System.out.println("LOGS::: " + sizeLog[0] + "  -- " + errorMessage);
             LevelZeroUtils.errorLog("zeModuleBuildLogGetString", result);
@@ -271,7 +293,7 @@ public class TestLevelZero {
         LevelZeroUtils.errorLog("zeKernelCreate", result);
 
         // We create a kernel Object
-        LevelZeroKernel levelZeroKernel = new LevelZeroKernel(kernelDesc, kernel);
+        LevelZeroKernel levelZeroKernel = new LevelZeroKernel(kernelDesc, kernel, levelZeroModule);
 
         // Prepare kernel for launch
         // A) Suggest scheduling parameters to level-zero

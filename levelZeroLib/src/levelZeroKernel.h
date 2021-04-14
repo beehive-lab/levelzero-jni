@@ -25,11 +25,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
- * Method:    zeKernelSetArgumentValue_native
- * Signature: (JIILuk/ac/manchester/tornado/drivers/spirv/levelzero/LevelZeroBufferInteger;)I
+ * Method:    zeKernelSetArgumentValue_nativePtrArg
+ * Signature: (JIIJ)I
  */
-JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1native
-        (JNIEnv *, jobject, jlong, jint, jint, jobject);
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePtrArg
+        (JNIEnv *, jobject, jlong, jint, jint, jlong);
 
 #ifdef __cplusplus
 }

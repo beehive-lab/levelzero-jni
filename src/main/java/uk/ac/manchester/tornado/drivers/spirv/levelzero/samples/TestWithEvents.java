@@ -15,6 +15,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventScopeFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 public class TestWithEvents {
 
