@@ -40,9 +40,9 @@ import static uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUt
  * To compile to SPIR-V:
  * 
  * <code>
- *     $ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
- *     $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
- *     $ cp opencl-copy.spv /tmp/copy.spv
+ *     $ clang -cc1 -triple spir copydata.cl -O0 -finclude-default-header -emit-llvm-bc -o copydata.bc
+ *     $ llvm-spirv copydata.bc -o copydata.spv
+ *     $ cp opencl-copy.spv /tmp/copydata.spv
  * </code>
  * 
  * How to run?
@@ -96,13 +96,13 @@ public class TestLevelZeroDedicatedMemory {
         moduleDesc.setFormat(ZeModuleFormat.ZE_MODULE_FORMAT_IL_SPIRV);
         moduleDesc.setBuildFlags("");
 
-        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "/tmp/copy.spv");
+        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "/tmp/copydata.spv");
         LevelZeroUtils.errorLog("zeModuleCreate", result);
 
         if (result != ZeResult.ZE_RESULT_SUCCESS) {
             // Print Logs
             int[] sizeLog = new int[1];
-            String errorMessage = "";
+            String[] errorMessage = new String[1];
             result = context.zeModuleBuildLogGetString(buildLog, sizeLog, errorMessage);
             System.out.println("LOGS::: " + sizeLog[0] + "  -- " + errorMessage);
             LevelZeroUtils.errorLog("zeModuleBuildLogGetString", result);

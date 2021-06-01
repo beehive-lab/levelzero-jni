@@ -43,8 +43,8 @@ public class LevelZeroDriver {
      *           </code>
      * 
      * @param init
-     *            Flag
-     * @return
+     *            Flag: {@link ZeInitFlag}
+     * @return error code
      */
     public native int zeInit(int init);
 

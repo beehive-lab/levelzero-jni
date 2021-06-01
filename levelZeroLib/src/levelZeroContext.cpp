@@ -329,19 +329,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
     LOG_ZE_JNI("zeMemAllocShared", result);
 
-    // Update Device Description
-    env->SetIntField(javaDeviceMemAllocDescClass, fieldTypeDeviceDesc, deviceDesc.stype);
-    jfieldID pNext = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaDeviceMemAllocDescClass, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldOrdinalDeviceDesc, deviceDesc.ordinal);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldFlagsDeviceDesc, deviceDesc.flags);
-
-    // Update host description
-    env->SetIntField(javaHostMemAllocDesc, fieldTypeHostDesc, hostDesc.stype);
-    pNext = env->GetFieldID(javaHostMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaHostMemAllocDesc, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaHostMemAllocDesc, fieldTypeHostDesc, hostDesc.flags);
-
     // Set Buffer Pointer
     env->SetLongField(javaLevelZeroBuffer, fieldBuffer, reinterpret_cast<jlong>(buffer));
 
@@ -389,19 +376,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
     LOG_ZE_JNI("zeMemAllocShared - [ByteBuffer]", result);
 
-    // Update Device Description
-    env->SetIntField(javaDeviceMemAllocDescClass, fieldTypeDeviceDesc, deviceDesc.stype);
-    jfieldID pNext = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaDeviceMemAllocDescClass, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldOrdinalDeviceDesc, deviceDesc.ordinal);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldFlagsDeviceDesc, deviceDesc.flags);
-
-    // Update host description
-    env->SetIntField(javaHostMemAllocDesc, fieldTypeHostDesc, hostDesc.stype);
-    pNext = env->GetFieldID(javaHostMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaHostMemAllocDesc, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaHostMemAllocDesc, fieldTypeHostDesc, hostDesc.flags);
-
     // Set Buffer Pointer
     env->SetLongField(javaLevelZeroBuffer, fieldBuffer, reinterpret_cast<jlong>(buffer));
 
@@ -438,15 +412,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
     LOG_ZE_JNI("zeMemAllocDevice", result)
-
-    // Update Device Description
-    env->SetIntField(javaDeviceMemAllocDescClass, fieldTypeDeviceDesc, deviceDesc.stype);
-    jfieldID pNext = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaDeviceMemAllocDescClass, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldOrdinalDeviceDesc, deviceDesc.ordinal);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldFlagsDeviceDesc, deviceDesc.flags);
-
-    std::cout << "Native Pointer: " << buffer << std::endl;
 
     // Set Buffer Pointer and attributes
     jfieldID fieldBufferSize = env->GetFieldID(javaBufferClass, "size", "I");
@@ -487,13 +452,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
     LOG_ZE_JNI("zeMemAllocDevice - [LONG]", result)
-
-    // Update Device Description
-    env->SetIntField(javaDeviceMemAllocDescClass, fieldTypeDeviceDesc, deviceDesc.stype);
-    jfieldID pNext = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    env->SetLongField(javaDeviceMemAllocDescClass, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldOrdinalDeviceDesc, deviceDesc.ordinal);
-    env->SetLongField(javaDeviceMemAllocDescClass, fieldFlagsDeviceDesc, deviceDesc.flags);
 
     // Set Buffer Pointer and attributes
     jfieldID fieldBufferSize = env->GetFieldID(javaBufferClass, "size", "I");
@@ -639,14 +597,14 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroContext
  * Method:    zeModuleBuildLogGetString_native
- * Signature: (Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZeBuildLogHandle;[ILjava/lang/String;)I
+ * Signature: (Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZeBuildLogHandle;[I[Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroContext_zeModuleBuildLogGetString_1native
-        (JNIEnv *env, jobject object, jobject javaBuildLog, jintArray javaSizeArray, jstring javaStringMessage) {
+        (JNIEnv *env, jobject object, jobject javaBuildLogHandle, jintArray javaSizeArray, jobjectArray javaStringMessage) {
 
-    jclass javaBuildLogClass = env->GetObjectClass(javaBuildLog);
+    jclass javaBuildLogClass = env->GetObjectClass(javaBuildLogHandle);
     jfieldID fieldPtrLog = env->GetFieldID(javaBuildLogClass, "ptrZeBuildLogHandle", "J");
-    jlong ptrLog = env->GetLongField(javaBuildLog, fieldPtrLog);
+    jlong ptrLog = env->GetLongField(javaBuildLogHandle, fieldPtrLog);
 
     auto logHandle = reinterpret_cast<ze_module_build_log_handle_t>(ptrLog);
 
@@ -658,7 +616,8 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     result = zeModuleBuildLogGetString(logHandle, &szLog, stringLog);
     LOG_ZE_JNI("zeModuleBuildLogGetString", result);
 
-    env->ReleaseStringChars(javaStringMessage, reinterpret_cast<const jchar *>(stringLog));
+    jstring str = env->NewStringUTF(stringLog);
+    env->SetObjectArrayElement(javaStringMessage, 0, str);
 
     jint* sizeArray = env->GetIntArrayElements(javaSizeArray, 0);
     sizeArray[0] = szLog;
@@ -861,13 +820,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     ze_result_t result = zeMemAllocHost(context, &deviceDesc, allocSize, alignment, (void**) &buffer);
     LOG_ZE_JNI("zeMemAllocHost", result);
-
-    // Update Host Description
-    env->SetIntField(javaHostDescClass, fieldTypeDeviceDesc, deviceDesc.stype);
-    jfieldID pNext = env->GetFieldID(javaHostDescClass, "pNext", "J");
-    env->SetLongField(javaHostDescClass, pNext, (jlong) deviceDesc.pNext);
-    env->SetLongField(javaHostDescClass, fieldFlagsDeviceDesc, deviceDesc.flags);
-
+    
     // Set Buffer Pointer and attributes
     jfieldID fieldBufferSize = env->GetFieldID(javaBufferClass, "size", "I");
     jfieldID alignmentField = env->GetFieldID(javaBufferClass, "alignment", "I");
