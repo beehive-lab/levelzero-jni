@@ -1,7 +1,7 @@
 How to build native
 
 
-Note: Using commit `e2b2969e82f8fe667f36be44d99a101bd9b73ce7` from `level-zero` 
+Note: Using commit `551dd5810a3cea7a7e26ac4441da31878e804b53` from `level-zero` 
 
 
 ```bash
