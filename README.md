@@ -56,9 +56,9 @@ __kernel void copydata(__global int* input, __global int* output) {
 To compile to SPIR-V:
 
 ```bash
-$ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
+$ clang -cc1 -triple spir copy_data.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
 $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
-$ mv opencl-copy.spv /tmp/example.spv
+$ mv opencl-copy.spv /tmp/opencl-copy.spv
 ```
 
 
@@ -68,5 +68,5 @@ The clang implementation I'm currently using is the `intel/llvm`: https://github
 To run:
 
 ```bash
-$ java -Djava.library.path=./levelZeroLib/build -cp target/levelzero-1.0-SNAPSHOT.jar TestLevelZero
+$ java -Djava.library.path=./levelZeroLib/build -cp target/levelzero-1.0-SNAPSHOT.jar uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
 ```
