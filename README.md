@@ -1,6 +1,14 @@
-#### Compilation & Configuration of the JNI Level-Zero API 
+# LevelZero JNI 
 
-###### 1) Install Level-Zero
+Baremetal GPU and FPGA programming for Java using the [LevelZero API](https://spec.oneapi.io/level-zero/latest/index.html). 
+
+
+This project is a Java Native Interface (JNI) binding for Intel's Level Zero. This library is as designed to be as closed as possible to the LevelZero API for C++. 
+
+
+## Compilation & Configuration of the JNI Level-Zero API 
+
+### 1) Install Level-Zero
 
 
 Note: Using commit `551dd5810a3cea7a7e26ac4441da31878e804b53` from `level-zero` 
@@ -16,7 +24,7 @@ $ cmake --build . --config Release --target package
 ```
 
 
-###### 2) Compile JNI Native Code 
+### 2) Compile JNI Native Code 
 
 Set the paths to the directory of Level-Zero installation. Here's an example:
 
@@ -32,7 +40,7 @@ $ cmake ..
 $ make 
 ```
 
-###### 3) Compile & Run a Java test
+### 3) Compile & Run a Java test
 
 
 ```bash
