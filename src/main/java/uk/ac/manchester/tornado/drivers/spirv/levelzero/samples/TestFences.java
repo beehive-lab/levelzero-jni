@@ -271,8 +271,15 @@ public class TestFences {
         LevelZeroUtils.errorLog("zeFenceCreate", result);
 
 
-        result = commandQueue.zeCommandQueueExecuteCommandLists(commandQueueHandle.getCommandQueueHandlerPointer(), 1, zeCommandListHandler, null);
+        result = commandQueue.zeCommandQueueExecuteCommandLists(commandQueueHandle.getCommandQueueHandlerPointer(), 1, zeCommandListHandler, fence);
         LevelZeroUtils.errorLog("zeCommandQueueExecuteCommandLists", result);
+
+        result = fence.zeFenceHostSynchronize(fenceHandler.getPtrZeFenceHandle(), Long.MAX_VALUE);
+        LevelZeroUtils.errorLog("zeFenceHostSynchronize", result);
+
+        result = fence.zeFenceReset(fenceHandler.getPtrZeFenceHandle());
+        LevelZeroUtils.errorLog("zeFenceReset", result);
+
 
         result = commandQueue.zeCommandQueueSynchronize(commandQueueHandle.getCommandQueueHandlerPointer(), Long.MAX_VALUE);
         LevelZeroUtils.errorLog("zeCommandQueueSynchronize", result);

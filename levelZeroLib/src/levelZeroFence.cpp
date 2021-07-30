@@ -41,5 +41,34 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetLongField(javaFenceHandler, fieldPointer, reinterpret_cast<jlong>(fenceHandler));
 
     return result;
-
 }
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroFence
+ * Method:    zeFenceHostSynchronize_native
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroFence_zeFenceHostSynchronize_1native
+    (JNIEnv *, jobject, jlong javaFenceHandlerPointer, jlong maxValue) {
+
+    ze_fence_handle_t fenceHandle = reinterpret_cast<ze_fence_handle_t>(javaFenceHandlerPointer);
+
+    ze_result_t result = zeFenceHostSynchronize(fenceHandle, maxValue);
+    LOG_ZE_JNI("zeFenceHostSynchronize", result);
+
+    return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroFence
+ * Method:    zeFenceReset_native
+ * Signature: (J)I
+*/
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroFence_zeFenceReset_1native
+(JNIEnv *, jobject, jlong javaFenceHandlerPointer) {
+    ze_fence_handle_t fenceHandle = reinterpret_cast<ze_fence_handle_t>(javaFenceHandlerPointer);
+    ze_result_t result = zeFenceReset(fenceHandle);
+    LOG_ZE_JNI("zeFenceReset", result);
+    return result;
+}
+
