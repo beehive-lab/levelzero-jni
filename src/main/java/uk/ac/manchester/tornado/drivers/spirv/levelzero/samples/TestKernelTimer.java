@@ -198,7 +198,7 @@ public class TestKernelTimer {
         bufferB.memset(0, elements);
 
         LevelZeroByteBuffer timeStampBuffer = new LevelZeroByteBuffer();
-        result = context.zeMemAllocHost(context.getDefaultContextPtr(), hostMemAllocDesc, bufferSize, 1, timeStampBuffer);
+        result = context.zeMemAllocHost(context.getDefaultContextPtr(), hostMemAllocDesc, Sizeof.ze_kernel_timestamp_result_t.getNumBytes(), 1, timeStampBuffer);
         LevelZeroUtils.errorLog("zeMemAllocHost", result);
 
         ZeModuleHandle module = new ZeModuleHandle();
@@ -269,8 +269,8 @@ public class TestKernelTimer {
         result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
         LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
 
-        // commandList.zeCommandListAppendQueryKernelTimestamps(commandList.getCommandListHandlerPtr(),
-        // 1, kernelEventTimer, timeStampBuffer, null, null, 0, null);
+        result = commandList.zeCommandListAppendQueryKernelTimestamps(commandList.getCommandListHandlerPtr(), 1, kernelEventTimer, timeStampBuffer, null, null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendQueryKernelTimestamps", result);
 
         result = commandList.zeCommandListClose(zeCommandListHandler.getPtrZeCommandListHandle());
         LevelZeroUtils.errorLog("zeCommandListClose", result);

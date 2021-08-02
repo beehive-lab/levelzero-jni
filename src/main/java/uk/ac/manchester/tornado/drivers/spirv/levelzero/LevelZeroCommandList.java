@@ -423,4 +423,13 @@ public class LevelZeroCommandList {
     public int zeCommandListReset(long commandListHandlerPtr) {
         return zeCommandListReset_native(commandListHandlerPtr);
     }
+
+    private native int zeCommandListAppendQueryKernelTimestamps_native(long commandListHandlerPtr, int numEvents, ZeEventHandle event, LevelZeroByteBuffer timeStampBuffer, int[] offsets,
+            ZeEventHandle signalEventHandler, int numWaitEvents, ZeEventHandle[] waitEventsHandlers);
+
+    public int zeCommandListAppendQueryKernelTimestamps(long commandListHandlerPtr, int numEvents, ZeEventHandle event, LevelZeroByteBuffer timeStampBuffer, int[] offsets,
+            ZeEventHandle signalEventHandler, int numWaitEvents, ZeEventHandle[] waitEventsHandlers) {
+        return zeCommandListAppendQueryKernelTimestamps_native(commandListHandlerPtr, numEvents, event, timeStampBuffer, offsets, signalEventHandler, numWaitEvents, waitEventsHandlers);
+    }
+
 }

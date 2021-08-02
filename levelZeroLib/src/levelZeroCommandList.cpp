@@ -408,3 +408,43 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     LOG_ZE_JNI("zeCommandListReset", result);
     return result;
 }
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList
+ * Method:    zeCommandListAppendQueryKernelTimestamps_native
+ * Signature: (JILuk/ac/manchester/tornado/drivers/spirv/levelzero/ZeEventHandle;Luk/ac/manchester/tornado/drivers/spirv/levelzero/LevelZeroByteBuffer;[ILuk/ac/manchester/tornado/drivers/spirv/levelzero/ZeEventHandle;I[Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZeEventHandle;)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList_zeCommandListAppendQueryKernelTimestamps_1native
+    (JNIEnv *env, jobject, jlong javaCommandListHandlePtr, jint numEvents, jobject javaEventHandler, jobject javaLevelZeroByteBuffer, jintArray arrayOffsets, jobject javaSignalEvents, jint numWaitEvents, jobjectArray waitEventsHandler) {
+
+    ze_command_list_handle_t commandList = reinterpret_cast<ze_command_list_handle_t>(javaCommandListHandlePtr);
+
+    ze_event_handle_t events = nullptr;
+    if (javaEventHandler != nullptr) {
+        jclass signalEventClass = env->GetObjectClass(javaEventHandler);
+        jfieldID fieldSignal = env->GetFieldID(signalEventClass, "ptrZeEventHandle", "J");
+        long eventSignalPtr = env->GetLongField(javaEventHandler, fieldSignal);
+        events = reinterpret_cast<ze_event_handle_t>(eventSignalPtr);
+    }
+
+    size_t* offsets = nullptr;
+    if (arrayOffsets != nullptr) {
+        offsets = reinterpret_cast<size_t *>(env->GetIntArrayElements(arrayOffsets, 0));
+    }
+
+    void *timestampBuffer = nullptr;
+    if (javaLevelZeroByteBuffer != nullptr) {
+        jclass klass = env->GetObjectClass(javaLevelZeroByteBuffer);
+        jfieldID fieldPointer = env->GetFieldID(klass, "ptrBuffer", "J");
+        jlong ptr = env->GetLongField(javaLevelZeroByteBuffer, fieldPointer);
+        if (ptr != -1) {
+            timestampBuffer = reinterpret_cast<void *>(ptr);
+        }
+    }
+
+    ze_result_t result = zeCommandListAppendQueryKernelTimestamps(commandList, numEvents, &events, timestampBuffer, offsets, nullptr, numWaitEvents, nullptr);
+    LOG_ZE_JNI("zeCommandListAppendQueryKernelTimestamps", result);
+
+    return result;
+
+}
