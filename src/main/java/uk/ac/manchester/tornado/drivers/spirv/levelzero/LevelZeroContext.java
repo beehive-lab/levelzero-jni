@@ -234,6 +234,52 @@ public class LevelZeroContext {
 
     private native int zeEventPoolCreate_native(long defaultContextPtr, ZeEventPoolDescription eventPoolDesc, int numDevices, long deviceHandlerPtr, ZeEventPoolHandle eventPool);
 
+    /**
+     * Creates a pool of events on the context.
+     *
+     * Details:
+     * <ul>
+     * <li>The application must only use events within the pool for the device(s),
+     * or their sub-devices, which were provided during creation.</li>
+     * <li>The application may call this function from simultaneous threads.</li>
+     * <li>- The implementation of this function must be thread-safe.</li>
+     * </ul>
+     * 
+     * 
+     * @return Error code:
+     * 
+     *         <p>
+     *         ZE_RESULT_SUCCESS
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_UNINITIALIZED
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_DEVICE_LOST
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_NULL_HANDLE: if null is passed as a
+     *         defaultContextPtr
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_NULL_POINTER: if null is passed as a
+     *         eventPoolDesc or poolHandler
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_ENUMERATION: if description flags contains
+     *         0x7
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_OUT_OF_HOST_MEMORY
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_SIZE: if device count == 0 or (numDevices ==
+     *         0) && (null == devices)
+     *         </p>
+     */
     public int zeEventPoolCreate(long defaultContextPtr, ZeEventPoolDescription eventPoolDesc, int numDevices, long deviceHandlerPtr, ZeEventPoolHandle eventPool) {
         return zeEventPoolCreate_native(defaultContextPtr, eventPoolDesc, numDevices, deviceHandlerPtr, eventPool);
     }
