@@ -44,7 +44,7 @@ $ make
 
 
 ```bash
-$ ./compileAndRun.sh
+$ ./scripts/compileAndRun.sh
 ```
 
 
