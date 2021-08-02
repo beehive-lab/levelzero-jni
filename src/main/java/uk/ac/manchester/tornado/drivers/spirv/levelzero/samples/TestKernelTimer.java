@@ -23,6 +23,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueMode;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceMemAllocDesc;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceProperties;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverProperties;
@@ -37,6 +38,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelTimeStampResult;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleFormat;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleHandle;
@@ -280,6 +282,16 @@ public class TestKernelTimer {
 
         result = commandQueue.zeCommandQueueSynchronize(commandQueueHandle.getCommandQueueHandlerPointer(), Long.MAX_VALUE);
         LevelZeroUtils.errorLog("zeCommandQueueSynchronize", result);
+
+        ZeDeviceProperties deviceProperties = new ZeDeviceProperties();
+        result = device.zeDeviceGetProperties(device.getDeviceHandlerPtr(), deviceProperties);
+        LevelZeroUtils.errorLog("zeDeviceGetProperties", result);
+        System.out.println(deviceProperties);
+
+        ZeKernelTimeStampResult resultKernel = new ZeKernelTimeStampResult(deviceProperties);
+
+        resultKernel.resolve(timeStampBuffer);
+        resultKernel.printTimers();
 
         boolean isEqual = bufferA.isEqual(bufferB, elements);
         if (isEqual) {
