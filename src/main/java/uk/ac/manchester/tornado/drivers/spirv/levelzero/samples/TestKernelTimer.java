@@ -3,6 +3,7 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 import java.io.IOException;
 
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroBufferInteger;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroByteBuffer;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandList;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandQueue;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
@@ -22,7 +23,6 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueMode;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceMemAllocDesc;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceMemAllocFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverProperties;
@@ -34,7 +34,6 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventScopeFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeGroupDispatch;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocDesc;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelHandle;
@@ -181,11 +180,11 @@ public class TestKernelTimer {
         final int elements = 8192;
         final int bufferSize = elements * 4;
         ZeDeviceMemAllocDesc deviceMemAllocDesc = new ZeDeviceMemAllocDesc();
-        deviceMemAllocDesc.setFlags(ZeDeviceMemAllocFlags.ZE_DEVICE_MEM_ALLOC_FLAG_BIAS_UNCACHED);
+        // deviceMemAllocDesc.setFlags(ZeDeviceMemAllocFlags.ZE_DEVICE_MEM_ALLOC_FLAG_BIAS_UNCACHED);
         deviceMemAllocDesc.setOrdinal(0);
 
         ZeHostMemAllocDesc hostMemAllocDesc = new ZeHostMemAllocDesc();
-        hostMemAllocDesc.setFlags(ZeHostMemAllocFlags.ZE_HOST_MEM_ALLOC_FLAG_BIAS_UNCACHED);
+        // hostMemAllocDesc.setFlags(ZeHostMemAllocFlags.ZE_HOST_MEM_ALLOC_FLAG_BIAS_UNCACHED);
 
         LevelZeroBufferInteger bufferA = new LevelZeroBufferInteger();
         result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, bufferSize, 1, device.getDeviceHandlerPtr(), bufferA);
@@ -197,6 +196,10 @@ public class TestKernelTimer {
 
         bufferA.memset(100, elements);
         bufferB.memset(0, elements);
+
+        LevelZeroByteBuffer timeStampBuffer = new LevelZeroByteBuffer();
+        result = context.zeMemAllocHost(context.getDefaultContextPtr(), hostMemAllocDesc, bufferSize, 1, timeStampBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocHost", result);
 
         ZeModuleHandle module = new ZeModuleHandle();
         ZeModuleDesc moduleDesc = new ZeModuleDesc();
@@ -262,6 +265,12 @@ public class TestKernelTimer {
         // Launch the kernel on the Intel Integrated GPU
         result = commandList.zeCommandListAppendLaunchKernel(zeCommandListHandler.getPtrZeCommandListHandle(), kernel.getPtrZeKernelHandle(), dispatch, kernelEventTimer, 0, null);
         LevelZeroUtils.errorLog("zeCommandListAppendLaunchKernel", result);
+
+        result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
+        LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
+
+        // commandList.zeCommandListAppendQueryKernelTimestamps(commandList.getCommandListHandlerPtr(),
+        // 1, kernelEventTimer, timeStampBuffer, null, null, 0, null);
 
         result = commandList.zeCommandListClose(zeCommandListHandler.getPtrZeCommandListHandle());
         LevelZeroUtils.errorLog("zeCommandListClose", result);

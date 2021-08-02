@@ -1,5 +1,7 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
+import java.util.Arrays;
+
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroByteBuffer;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandList;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandQueue;
@@ -20,12 +22,10 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceMemAllocDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceProperties;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeMemAllocHostDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
-
-import java.util.Arrays;
 
 public class TestCopies {
 
@@ -213,7 +213,7 @@ public class TestCopies {
         LevelZeroCommandQueue commandQueue = createCommandQueue(context, device);
         LevelZeroCommandList commandList = createCommandList(context, device);
 
-        ZeMemAllocHostDesc hostMemAllocDesc = new ZeMemAllocHostDesc();
+        ZeHostMemAllocDesc hostMemAllocDesc = new ZeHostMemAllocDesc();
         hostMemAllocDesc.setFlags(0);
         int result = context.zeMemAllocHost(context.getContextHandle().getContextPtr()[0], hostMemAllocDesc, allocSize, 1, hostBuffer);
         LevelZeroUtils.errorLog("zeMemAllocHost", result);
