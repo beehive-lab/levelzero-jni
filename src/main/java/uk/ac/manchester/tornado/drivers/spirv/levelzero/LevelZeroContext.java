@@ -286,6 +286,59 @@ public class LevelZeroContext {
 
     private native int zeEventCreate_native(ZeEventPoolHandle eventPool, ZeEventDescription eventDescription, ZeEventHandle event);
 
+    /**
+     * Creates an event from the pool.
+     * 
+     * Details:
+     * <ul>
+     * <li>An event is used to communicate fine-grain host-to-device, device-to-host
+     * or device-to-device dependencies have completed.</li>
+     * <li>The application must ensure the location in the pool is not being used,by
+     * another event.</li>
+     * <li>The application must **not** call this function from simultaneous threads
+     * with the same event pool handle.</li>
+     * <li>The implementation of this function should be lock-free.</li>
+     * </ul>
+     * 
+     * Similar to:
+     * 
+     * <code>
+     *     clCreateUserEvent, vkCreateEvent
+     * </code>
+     * 
+     * @param eventPool
+     *            [IN] Handle of the event Pool
+     * @param eventDescription
+     *            [in] Object for the event descriptor
+     * @param event
+     *            [out] Object that contains a pointer to handle of event object
+     *            created
+     * @return An error code:
+     * 
+     *         <p>
+     *         ZE_RESULT_SUCCESS
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_UNINITIALIZED
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_DEVICE_LOST
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_NULL_HANDLE
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_NULL_POINTER
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_INVALID_ENUMERATION
+     *         </p>
+     *         <p>
+     *         ZE_RESULT_ERROR_OUT_OF_HOST_MEMORY
+     *         </p>
+     * 
+     * 
+     */
     public int zeEventCreate(ZeEventPoolHandle eventPool, ZeEventDescription eventDescription, ZeEventHandle event) {
         return zeEventCreate_native(eventPool, eventDescription, event);
     }
