@@ -3,14 +3,13 @@
 #include <iostream>
 #include "ze_api.h"
 #include "ze_log.h"
-
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList
  * Method:    zeCommandListAppendLaunchKernel_native
- * Signature: (JJLuk/ac/manchester/tornado/drivers/spirv/levelzero/ZeGroupDispatch;Ljava/lang/Object;ILjava/lang/Object;)I
+ * Signature: (JJLuk/ac/manchester/tornado/drivers/spirv/levelzero/ZeGroupDispatch;Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZeEventHandle;ILjava/lang/Object;)I
  */
 JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList_zeCommandListAppendLaunchKernel_1native
-        (JNIEnv *env, jobject object, jlong javaCommandListHandler, jlong javaKernelHandlerPtr, jobject javaDispatch, jobject javaSignalEvent, jint numWaits, jobject javaEventHandler) {
+(JNIEnv *env, jobject object, jlong javaCommandListHandler, jlong javaKernelHandlerPtr, jobject javaDispatch, jobject javaSignalEvent, jint numWaits, jobject javaEventHandler) {
 
     ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
 
@@ -31,8 +30,16 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     dispatch.groupCountY = groupCountY;
     dispatch.groupCountZ = groupCountZ;
 
+    ze_event_handle_t signalEvent = nullptr;
+    if (javaSignalEvent != nullptr) {
+        jclass signalEventClass = env->GetObjectClass(javaSignalEvent);
+        jfieldID fieldSignal = env->GetFieldID(signalEventClass, "ptrZeEventHandle", "J");
+        long eventSignalPtr = env->GetLongField(javaSignalEvent, fieldSignal);
+        signalEvent = reinterpret_cast<ze_event_handle_t>(eventSignalPtr);
+    }
+
     // XXX: Fix the rest of the parameters under demand
-    ze_result_t result = zeCommandListAppendLaunchKernel(cmdList, kernel, &dispatch, nullptr, numWaits, nullptr);
+    ze_result_t result = zeCommandListAppendLaunchKernel(cmdList, kernel, &dispatch, signalEvent, numWaits, nullptr);
     LOG_ZE_JNI("zeCommandListAppendLaunchKernel", result);
     return result;
 }

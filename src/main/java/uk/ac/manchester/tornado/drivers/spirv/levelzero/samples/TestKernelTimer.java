@@ -1,12 +1,13 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
+import java.io.IOException;
+
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroBufferInteger;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandList;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroCommandQueue;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDevice;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDriver;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroFence;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroKernel;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroModule;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Sizeof;
@@ -25,9 +26,12 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceMemAllocFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverProperties;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeFenceDesc;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeFenceFlag;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeFenceHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventDescription;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolDescription;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolFlags;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventPoolHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeEventScopeFlags;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeGroupDispatch;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeHostMemAllocFlags;
@@ -41,33 +45,30 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeResult;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
-import java.io.IOException;
-
 /**
  * Kernel to test:
  *
  * <code>
- *    __kernel void copydata(__global int* input, __global int* output) {
- * 	         uint idx = get_global_id(0);
- * 	         output[idx] = input[idx];
- *    }
+ * __kernel void copydata(__global int* input, __global int* output) {
+ * uint idx = get_global_id(0);
+ * output[idx] = input[idx];
+ * }
  * </code>
- *
- *
+ * <p>
+ * <p>
  * To compile to SPIR-V:
  *
  * <code>
- *     $ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
- *     $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
- *     $ mv opencl-copy.spv /tmp
+ * $ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
+ * $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
+ * $ mv opencl-copy.spv /tmp
  * </code>
- *
+ * <p>
  * How to run?
  *
  * <code>
- *     tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
+ * tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
  * </code>
- *
  */
 public class TestKernelTimer {
 
@@ -253,8 +254,13 @@ public class TestKernelTimer {
         dispatch.setGroupCountY(1);
         dispatch.setGroupCountZ(1);
 
+        ZeEventPoolHandle eventPoolHandle = new ZeEventPoolHandle();
+        ZeEventHandle kernelEventTimer = new ZeEventHandle();
+
+        createEventPoolAndEvents(context, device, eventPoolHandle, ZeEventPoolFlags.ZE_EVENT_POOL_FLAG_KERNEL_TIMESTAMP, 1, kernelEventTimer);
+
         // Launch the kernel on the Intel Integrated GPU
-        result = commandList.zeCommandListAppendLaunchKernel(zeCommandListHandler.getPtrZeCommandListHandle(), kernel.getPtrZeKernelHandle(), dispatch, null, 0, null);
+        result = commandList.zeCommandListAppendLaunchKernel(zeCommandListHandler.getPtrZeCommandListHandle(), kernel.getPtrZeKernelHandle(), dispatch, kernelEventTimer, 0, null);
         LevelZeroUtils.errorLog("zeCommandListAppendLaunchKernel", result);
 
         result = commandList.zeCommandListClose(zeCommandListHandler.getPtrZeCommandListHandle());
@@ -286,5 +292,24 @@ public class TestKernelTimer {
         result = driver.zeContextDestroy(context);
         LevelZeroUtils.errorLog("zeContextDestroy", result);
 
+    }
+
+    private static void createEventPoolAndEvents(LevelZeroContext context, LevelZeroDevice device, ZeEventPoolHandle eventPoolHandle, int poolEventFlags, int poolSize, ZeEventHandle kernelEvent) {
+
+        ZeEventPoolDescription eventPoolDescription = new ZeEventPoolDescription();
+
+        eventPoolDescription.setCount(poolSize);
+        eventPoolDescription.setFlags(poolEventFlags);
+
+        int result = context.zeEventPoolCreate(context.getDefaultContextPtr(), eventPoolDescription, 1, device.getDeviceHandlerPtr(), eventPoolHandle);
+        LevelZeroUtils.errorLog("zeEventPoolCreate", result);
+
+        // Create Kernel Event
+        ZeEventDescription eventDescription = new ZeEventDescription();
+        eventDescription.setIndex(0);
+        eventDescription.setSignal(ZeEventScopeFlags.ZE_EVENT_SCOPE_FLAG_HOST);
+        eventDescription.setWait(ZeEventScopeFlags.ZE_EVENT_SCOPE_FLAG_HOST);
+        result = context.zeEventCreate(eventPoolHandle, eventDescription, kernelEvent);
+        LevelZeroUtils.errorLog("zeEventCreate", result);
     }
 }

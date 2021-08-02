@@ -22,9 +22,9 @@ public class LevelZeroCommandList {
         return this.context;
     }
 
-    native int zeCommandListAppendLaunchKernel_native(long commandListHandler, long ptrZeKernelHandle, ZeGroupDispatch dispatch, Object signalEvent, int numWaitEvents, Object phWaitEvents);
+    native int zeCommandListAppendLaunchKernel_native(long commandListHandler, long ptrZeKernelHandle, ZeGroupDispatch dispatch, ZeEventHandle signalEvent, int numWaitEvents, Object phWaitEvents);
 
-    public int zeCommandListAppendLaunchKernel(long commandListHandler, long ptrZeKernelHandle, ZeGroupDispatch dispatch, Object signalEvent, int numWaitEvents, Object phWaitEvents) {
+    public int zeCommandListAppendLaunchKernel(long commandListHandler, long ptrZeKernelHandle, ZeGroupDispatch dispatch, ZeEventHandle signalEvent, int numWaitEvents, Object phWaitEvents) {
         return zeCommandListAppendLaunchKernel_native(commandListHandler, ptrZeKernelHandle, dispatch, signalEvent, numWaitEvents, phWaitEvents);
     }
 
