@@ -684,8 +684,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jfieldID field = env->GetFieldID(eventPoolClass, "ptrZeEventPoolHandle", "J");
     long ptrEventPool = env->GetLongField(javaEventPoolHandler, field);
     if (ptrEventPool != -1) {
-        //ze_event_pool_handle_t *eventPoolPtr = reinterpret_cast<ze_event_pool_handle_t*>(ptrEventPool);
-        //eventPool = *eventPoolPtr;
         eventPool = reinterpret_cast<ze_event_pool_handle_t>(ptrEventPool);
     } else {
         std::cout << "[TornadoVM-JNI] Error, Java Event Pool Handler native pointer is null - Invoke zeEventPoolCreate before calling this function " << std::endl;

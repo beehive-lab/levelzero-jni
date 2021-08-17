@@ -432,4 +432,10 @@ public class LevelZeroCommandList {
         return zeCommandListAppendQueryKernelTimestamps_native(commandListHandlerPtr, numEvents, event, timeStampBuffer, offsets, signalEventHandler, numWaitEvents, waitEventsHandlers);
     }
 
+    private native int zeCommandListAppendWriteGlobalTimestamp_native(long commandListHandlerPtr, LevelZeroByteBuffer globalTsStart, ZeEventHandle hSignalEvents, int numWaitEvents,
+            ZeEventHandle phWaitEvents);
+
+    public int zeCommandListAppendWriteGlobalTimestamp(long commandListHandlerPtr, LevelZeroByteBuffer globalTsStart, ZeEventHandle hSignalEvents, int numWaitEvents, ZeEventHandle phWaitEvents) {
+        return zeCommandListAppendWriteGlobalTimestamp_native(commandListHandlerPtr, globalTsStart, hSignalEvents, numWaitEvents, phWaitEvents);
+    }
 }
