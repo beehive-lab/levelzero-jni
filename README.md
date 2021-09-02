@@ -81,7 +81,7 @@ $ java -Djava.library.path=./levelZeroLib/build -cp target/levelzero-1.0-SNAPSHO
 
 ## License
 
-This project is developed at The University of Manchester, and it is fully open source under the [MIT](https://github.com/beehive-lab/levelzero-jni/blob/master/LICENSE) license.
+This project is developed at [The University of Manchester](https://www.manchester.ac.uk/), and it is fully open source under the [MIT](https://github.com/beehive-lab/levelzero-jni/blob/master/LICENSE) license.
 
 
 ## Acknowledgments
