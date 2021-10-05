@@ -441,7 +441,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetIntField(javaDeviceModuleProperties, field, deviceModuleProperties.printfBufferSize);
 
     field = env->GetFieldID(descriptionClass, "nativeKernelSupported", "[I");
-    
+
     jintArray intArray = env->NewIntArray(ZE_MAX_NATIVE_KERNEL_UUID_SIZE);
     jint *ids = env->GetIntArrayElements(intArray, 0);
     for (int i = 0; i  < ZE_MAX_NATIVE_KERNEL_UUID_SIZE; i++) {
