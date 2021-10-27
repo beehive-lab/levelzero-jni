@@ -42,6 +42,10 @@ public class ZeDriverHandle {
         return this.ze_driver_handle_t_ptr;
     }
 
+    public long getPointerDefaultDriver() {
+        return this.ze_driver_handle_t_ptr[0];
+    }
+
     public void setZe_driver_handle_t_ptr(long[] pointers) {
         this.ze_driver_handle_t_ptr = pointers;
     }
