@@ -28,9 +28,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Abstraction of a LevelZero Driver. A LevelZero driver is composed of one or
+ * more physical devices.
+ */
 public class LevelZeroDriver {
 
+    /**
+     * Table to keep a mapping between a driver handler and all devices that belong
+     * that this specific driver.
+     */
     private Map<ZeDriverHandle, ArrayList<LevelZeroDevice>> architectureMap;
+
+    /**
+     * Table to keep a mapping between the driver handler and pointers to a device
+     * handler.
+     */
     private Map<ZeDriverHandle, ZeDevicesHandle> architecturePointers;
 
     static {
@@ -128,7 +141,7 @@ public class LevelZeroDriver {
      *         {@link ZeResult.ZE_RESULT_SUCCESS} 
      *         {@link ZeResult.ZE_RESULT_ERROR_UNINITIALIZED}
      *         {@link ZeResult.ZE_RESULT_ERROR_DEVICE_LOST}
-     *         {@link ZeResult.ZE_RESULT_ERROR_INVALID_NULL_POINTER}: if driverCount is null.         
+     *         {@link ZeResult.ZE_RESULT_ERROR_INVALID_NULL_POINTER}: if driverCount is null.*         
      *       </code>
      * @param driverCount
      *            array with driver count
@@ -136,8 +149,8 @@ public class LevelZeroDriver {
      *            Driver Handler object {@link ZeDriverHandle}
      */
     public int zeDriverGet(int[] driverCount, ZeDriverHandle driverHandler) {
-        long[] pointers = driverHandler == null ? null : driverHandler.getZe_driver_handle_t_ptr();
-        int result = zeDriverGet_native(driverCount, pointers);
+        long[] driverNativePointers = driverHandler == null ? null : driverHandler.getZe_driver_handle_t_ptr();
+        int result = zeDriverGet_native(driverCount, driverNativePointers);
         architectureMap.put(driverHandler, null);
         return result;
     }

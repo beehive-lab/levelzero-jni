@@ -24,7 +24,7 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeDriverHandle extends ZePointer {
+public class ZeDriverHandle {
 
     private int numDrivers;
     long[] ze_driver_handle_t_ptr;
