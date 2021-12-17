@@ -38,6 +38,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroModule;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Sizeof;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeAPIVersion;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeBuildLogHandle;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCacheConfigFlag;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandListDescription;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandListHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeCommandQueueDescription;
@@ -260,6 +261,9 @@ public class TestKernelTimer {
 
         // We create a kernel Object
         LevelZeroKernel levelZeroKernel = new LevelZeroKernel(kernelDesc, kernel, levelZeroModule);
+
+        result = levelZeroKernel.zeKernelSetCacheConfig(kernel.getPtrZeKernelHandle(), ZeCacheConfigFlag.ZE_CACHE_CONFIG_FLAG_LARGE_SLM);
+        LevelZeroUtils.errorLog("zeKernelSetCacheConfig", result);
 
         // Prepare kernel for launch
         // A) Suggest scheduling parameters to level-zero
