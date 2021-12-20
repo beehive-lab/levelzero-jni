@@ -496,6 +496,17 @@ public class LevelZeroCommandList {
 
     private native int zeCommandListAppendMemoryPrefetch_native(long commandListHandlerPtr, LevelZeroBufferInteger bufferA, int bufferSize);
 
+    /**
+     * Asynchronously prefetches shared memory to the device associated with the specified command list.
+     *
+     * @param commandListHandlerPtr
+     *         Pointer Handler to the command list
+     * @param bufferA
+     *         LevelZeroBufferInteger - pointer to start of the memory range to prefetch.
+     * @param bufferSize
+     *        Size in bytes of the memory range to prefetch.
+     * @return
+     */
     public int zeCommandListAppendMemoryPrefetch(long commandListHandlerPtr, LevelZeroBufferInteger bufferA, int bufferSize) {
         return zeCommandListAppendMemoryPrefetch_native(commandListHandlerPtr, bufferA, bufferSize);
     }
