@@ -510,4 +510,10 @@ public class LevelZeroCommandList {
     public int zeCommandListAppendMemoryPrefetch(long commandListHandlerPtr, LevelZeroBufferInteger bufferA, int bufferSize) {
         return zeCommandListAppendMemoryPrefetch_native(commandListHandlerPtr, bufferA, bufferSize);
     }
+
+    private native int zeCommandListAppendMemAdvise_native(long commandListHandlerPtr, long deviceHandlerPtr, LevelZeroBufferInteger bufferA, int bufferSize, int memoryAdvice);
+
+    public int zeCommandListAppendMemAdvise(long commandListHandlerPtr, long deviceHandlerPtr, LevelZeroBufferInteger bufferA, int bufferSize, int memoryAdvice) {
+        return zeCommandListAppendMemAdvise_native(commandListHandlerPtr, deviceHandlerPtr, bufferA, bufferSize, memoryAdvice);
+    }
 }

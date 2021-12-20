@@ -64,6 +64,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelTimeStampResult;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeMemoryAdvice;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleDesc;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleFormat;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleHandle;
@@ -222,6 +223,9 @@ public class TestKernelTimer {
         LevelZeroUtils.errorLog("zeMemAllocShared", result);
 
         result = commandList.zeCommandListAppendMemoryPrefetch(commandList.getCommandListHandlerPtr(), bufferA, bufferSize);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryPrefetch", result);
+
+        result = commandList.zeCommandListAppendMemAdvise(commandList.getCommandListHandlerPtr(), device.getDeviceHandlerPtr(), bufferA, bufferSize, ZeMemoryAdvice.ZE_MEMORY_ADVICE_SET_PREFERRED_LOCATION);
         LevelZeroUtils.errorLog("zeCommandListAppendMemoryPrefetch", result);
 
         bufferA.memset(100, elements);
