@@ -201,6 +201,14 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList_zeCommandListAppendWriteGlobalTimestamp_1native
     (JNIEnv *, jobject, jlong, jobject, jobject, jint, jobject);
 
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList
+ * Method:    zeCommandListAppendMemoryPrefetch_native
+ * Signature: (JLuk/ac/manchester/tornado/drivers/spirv/levelzero/LevelZeroBufferInteger;I)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList_zeCommandListAppendMemoryPrefetch_1native
+        (JNIEnv *, jobject, jlong, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif

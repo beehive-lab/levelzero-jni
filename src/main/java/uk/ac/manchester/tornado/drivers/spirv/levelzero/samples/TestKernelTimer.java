@@ -221,6 +221,9 @@ public class TestKernelTimer {
         result = context.zeMemAllocShared(context.getDefaultContextPtr(), deviceMemAllocDesc, hostMemAllocDesc, bufferSize, 1, device.getDeviceHandlerPtr(), bufferB);
         LevelZeroUtils.errorLog("zeMemAllocShared", result);
 
+        result = commandList.zeCommandListAppendMemoryPrefetch(commandList.getCommandListHandlerPtr(), bufferA, bufferSize);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemoryPrefetch", result);
+
         bufferA.memset(100, elements);
         bufferB.memset(0, elements);
 

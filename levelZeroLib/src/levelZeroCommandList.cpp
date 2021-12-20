@@ -495,3 +495,24 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     LOG_ZE_JNI("zeCommandListAppendWriteGlobalTimestamp", result);
     return result;
 }
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList
+ * Method:    zeCommandListAppendMemoryPrefetch_native
+ * Signature: (JLuk/ac/manchester/tornado/drivers/spirv/levelzero/LevelZeroBufferInteger;I)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroCommandList_zeCommandListAppendMemoryPrefetch_1native
+        (JNIEnv *env, jobject, jlong javaCommandListHandlePtr, jobject levelZeroBufferInteger, jint size) {
+
+    ze_command_list_handle_t commandList = reinterpret_cast<ze_command_list_handle_t>(javaCommandListHandlePtr);
+
+    jclass classLevelZeroIntegerBuffer = env->GetObjectClass(levelZeroBufferInteger);
+    jfieldID fieldBufferPtr = env->GetFieldID(classLevelZeroIntegerBuffer, "ptrBuffer", "J");
+    long bufferPtr = env->GetLongField(levelZeroBufferInteger, fieldBufferPtr);
+    const void *ptr = reinterpret_cast<const void *>(bufferPtr);
+
+    ze_result_t result = zeCommandListAppendMemoryPrefetch(commandList, ptr, size);
+    LOG_ZE_JNI("zeCommandListAppendMemoryPrefetch", result);
+
+    return result;
+}
