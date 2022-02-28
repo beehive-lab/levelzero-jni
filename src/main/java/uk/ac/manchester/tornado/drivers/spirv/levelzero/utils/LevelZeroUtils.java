@@ -62,10 +62,15 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
 
 public class LevelZeroUtils {
 
+    public static final boolean DEBUG = Boolean.parseBoolean(System.getProperties().getProperty("tornado.debug", "False"));
+    public static final String YELLOW = "\u001B[33m";
+    public static final String RESET = "\u001B[0m";
+
+
     /**
      * Utility for controlling error from a method invoked using the JNI Level Zero
      * library.
-     * 
+     *
      * @param method
      *            Method called.
      * @param result
@@ -79,7 +84,7 @@ public class LevelZeroUtils {
 
     /**
      * Utility for creating a Level Zero Context.
-     * 
+     *
      * @param driver
      *            {@link LevelZeroDriver}
      * @return {@link LevelZeroContext}
@@ -110,7 +115,7 @@ public class LevelZeroUtils {
 
     /**
      * Utility for instantiating a {@link LevelZeroDevice}.
-     * 
+     *
      * @param context
      *            {@link LevelZeroContext}
      * @param driver
@@ -187,7 +192,7 @@ public class LevelZeroUtils {
 
     /**
      * Utility for creating a Level Zero Command List.
-     * 
+     *
      * @param device
      *            {@link LevelZeroDevice}
      * @param context
@@ -244,7 +249,7 @@ public class LevelZeroUtils {
 
     /**
      * Dispatch the LookUpBufferKernel.
-     * 
+     *
      * @param commandList
      *            {@link LevelZeroCommandList}
      * @param commandQueue
@@ -256,7 +261,7 @@ public class LevelZeroUtils {
      * @param output
      *            Long array with the results
      * @param bufferSize
-     * 
+     *
      * @return Long value with a valid address for the device (base address).
      */
     public static long dispatchLookUpBuffer(LevelZeroCommandList commandList, LevelZeroCommandQueue commandQueue, LevelZeroKernel levelZeroKernel, LevelZeroByteBuffer deviceBuffer, long[] output,
@@ -320,7 +325,9 @@ public class LevelZeroUtils {
 
         long baseAddress = allocate.getLong(0);
         output[0] = baseAddress;
-        System.out.println("Base Address: " + Long.toUnsignedString(baseAddress));
+        if (DEBUG) {
+            System.out.printf(YELLOW + "[SPIRV-V-Runtime] Base Address " + baseAddress + RESET + "%%n");
+        }
         commandList.zeCommandListReset(commandList.getCommandListHandlerPtr());
         errorLog("zeCommandListReset", result);
         return baseAddress;
