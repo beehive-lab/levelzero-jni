@@ -62,10 +62,9 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
 
 public class LevelZeroUtils {
 
-    public static final boolean DEBUG = Boolean.parseBoolean(System.getProperties().getProperty("tornado.debug", "False"));
-    public static final String YELLOW = "\u001B[33m";
-    public static final String RESET = "\u001B[0m";
-
+     public static final boolean DEBUG = Boolean.parseBoolean(System.getProperties().getProperty("tornado.debug", "False"));
+     public static final String YELLOW = "\u001B[33m";
+     public static final String RESET = "\u001B[0m";
 
     /**
      * Utility for controlling error from a method invoked using the JNI Level Zero
@@ -328,6 +327,7 @@ public class LevelZeroUtils {
         if (DEBUG) {
             System.out.printf(YELLOW + "[SPIRV-V-Runtime] Base Address " + baseAddress + RESET + "%%n");
         }
+
         commandList.zeCommandListReset(commandList.getCommandListHandlerPtr());
         errorLog("zeCommandListReset", result);
         return baseAddress;
