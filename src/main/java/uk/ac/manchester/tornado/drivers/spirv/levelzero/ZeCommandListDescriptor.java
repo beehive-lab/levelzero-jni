@@ -35,6 +35,13 @@ public class ZeCommandListDescriptor extends LevelZeroDescriptor {
         this.ptrZeCommandListDescriptor = -1;
     }
 
+
+    private native void materializeNative_ZeCommandListDescriptor();
+    @Override
+    public void materialize() {
+        materializeNative_ZeCommandListDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }

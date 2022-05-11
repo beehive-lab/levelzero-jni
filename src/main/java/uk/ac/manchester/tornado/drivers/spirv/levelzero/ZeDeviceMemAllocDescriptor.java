@@ -37,6 +37,13 @@ public class ZeDeviceMemAllocDescriptor extends LevelZeroDescriptor {
         this.pNext = -1;
     }
 
+    private native void materializeNative_ZeDeviceMemAllocDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeDeviceMemAllocDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }

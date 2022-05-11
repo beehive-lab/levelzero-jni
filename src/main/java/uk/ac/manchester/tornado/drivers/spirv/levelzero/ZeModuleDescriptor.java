@@ -44,6 +44,13 @@ public class ZeModuleDescriptor extends LevelZeroDescriptor {
         this.ptrZeModuleDesc = -1;
     }
 
+    private native void materializeNative_ZeModuleDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeModuleDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }

@@ -382,20 +382,33 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jfieldID fieldOrdinalDeviceDesc = env->GetFieldID(javaDeviceMemAllocDescClass, "ordinal", "J");
     long ordinalDeviceDesc = env->GetLongField(javaDeviceMemAllocDesc, fieldOrdinalDeviceDesc);
 
+    jfieldID fieldPNextMemAlloc = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
+    ulong pnextDeviceAlloc = env->GetLongField(javaDeviceMemAllocDesc, fieldPNextMemAlloc);
+
     ze_device_mem_alloc_desc_t deviceDesc = {};
     deviceDesc.stype = static_cast<ze_structure_type_t>(typeDeviceDesc);
     deviceDesc.ordinal = ordinalDeviceDesc;
     deviceDesc.flags = flagDeviceDesc;
+
+    if (pnextDeviceAlloc != -1) {
+        deviceDesc.pNext = reinterpret_cast<void *>(pnextDeviceAlloc);
+    }
 
     jclass javaHostMemAllocDescClass = env->GetObjectClass(javaHostMemAllocDesc);
     jfieldID fieldTypeHostDesc = env->GetFieldID(javaHostMemAllocDescClass, "stype", "I");
     int typeHostDesc = env->GetIntField(javaHostMemAllocDesc, fieldTypeHostDesc);
     jfieldID fieldFlagsHostDesc = env->GetFieldID(javaHostMemAllocDescClass, "flags", "J");
     long flagsHostDesc = env->GetLongField(javaHostMemAllocDesc, fieldFlagsHostDesc);
+    jfieldID fieldPNextHostAlloc = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
+    ulong pnextHostAlloc = env->GetLongField(javaDeviceMemAllocDesc, fieldPNextHostAlloc);
 
     ze_host_mem_alloc_desc_t hostDesc;
     hostDesc.stype = static_cast<ze_structure_type_t>(typeHostDesc);
     hostDesc.flags = flagsHostDesc;
+
+    if (pnextHostAlloc != -1) {
+        hostDesc.pNext = reinterpret_cast<void *>(pnextHostAlloc);
+    }
 
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
     LOG_ZE_JNI("zeMemAllocShared - [ByteBuffer]", result);

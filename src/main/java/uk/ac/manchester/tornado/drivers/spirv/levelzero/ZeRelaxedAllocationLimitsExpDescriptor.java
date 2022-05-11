@@ -39,6 +39,15 @@ public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor 
     public ZeRelaxedAllocationLimitsExpDescriptor() {
         pNext = -1;
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_RELAXED_ALLOCATION_LIMITS_EXP_DESC;
+        selfPtr = -1;
+    }
+
+    private native void materializeNative_ZeRelaxedAllocationLimitsExpDescriptor();
+
+    @Override
+    public void materialize() {
+        // Native Call to object the selfPtr for the current object
+        materializeNative_ZeRelaxedAllocationLimitsExpDescriptor();
     }
 
     public int getStype() {
@@ -60,4 +69,5 @@ public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor 
     public void setPNext(long pNextPtr) {
         this.pNext = pNextPtr;
     }
+
 }

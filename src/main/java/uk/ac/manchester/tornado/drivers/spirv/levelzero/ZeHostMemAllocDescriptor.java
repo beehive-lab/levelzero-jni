@@ -35,6 +35,12 @@ public class ZeHostMemAllocDescriptor extends LevelZeroDescriptor {
         this.ptrZeHostMemAllocDesc = -1;
     }
 
+    private native void materializeNative_ZeHostMemAllocDescriptor();
+    @Override
+    public void materialize() {
+        materializeNative_ZeHostMemAllocDescriptor();
+    }
+
     public void setFlags(int flags) {
         this.flags = flags;
     }

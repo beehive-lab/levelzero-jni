@@ -34,6 +34,13 @@ public class ZeContextDescriptor extends LevelZeroDescriptor {
         this.nativePointer = -1;
     }
 
+    private native void materializeNative_ZeContextDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeContextDescriptor();
+    }
+
     public int getFlags() {
         return flags;
     }

@@ -51,6 +51,13 @@ public class ZeEventPoolDescriptor extends LevelZeroDescriptor {
         this.ptrZeEventPoolDescriptor = -1;
     }
 
+    private native void materializeNative_ZeEventPoolDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeEventPoolDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }

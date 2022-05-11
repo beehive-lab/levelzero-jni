@@ -40,6 +40,13 @@ public class ZeCommandQueueDescriptor extends LevelZeroDescriptor {
         this.ptrZeCommandDescriptor = -1;
     }
 
+    private native void materializeNative_ZeCommandQueueDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeCommandQueueDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }

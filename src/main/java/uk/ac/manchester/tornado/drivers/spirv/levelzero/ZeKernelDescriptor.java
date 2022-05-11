@@ -36,6 +36,13 @@ public class ZeKernelDescriptor extends LevelZeroDescriptor {
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_KERNEL_DESC;
     }
 
+    private native void materializeNative_ZeKernelDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeKernelDescriptor();
+    }
+
     public void setType(int stype) {
         this.stype = stype;
     }

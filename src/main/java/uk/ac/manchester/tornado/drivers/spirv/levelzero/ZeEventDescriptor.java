@@ -61,6 +61,13 @@ public class ZeEventDescriptor extends LevelZeroDescriptor {
         this.ptrZeEventDescriptor = -1;
     }
 
+    private native void materializeNative_ZeEventDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeEventDescriptor();
+    }
+
     public void setStype(int stype) {
         this.stype = stype;
     }

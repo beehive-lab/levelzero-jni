@@ -38,6 +38,13 @@ public class ZeFenceDescriptor extends LevelZeroDescriptor {
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_FENCE_DESC;
     }
 
+    private native void materializeNative_ZeFenceDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeFenceDescriptor();
+    }
+
     public int getStype() {
         return stype;
     }
