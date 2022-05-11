@@ -36,11 +36,11 @@
  * Signature: (JLuk/ac/manchester/tornado/drivers/spirv/levelzero/ZeContextDescriptor;[J)I
  */
 JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroContext_zeContextCreate
-    (JNIEnv *env, jobject object, jlong javaDriverHandler, jobject DescriptorObject, jlongArray contextArray) {
+    (JNIEnv *env, jobject object, jlong javaDriverHandler, jobject descriptorObject, jlongArray contextArray) {
 
-    jclass DescriptorClass = env->GetObjectClass(DescriptorObject);
-    jfieldID fieldDescriptorType = env->GetFieldID(DescriptorClass, "type", "I");
-    ze_structure_type_t type = static_cast<ze_structure_type_t>(env->GetIntField(DescriptorObject, fieldDescriptorType));
+    jclass descriptorClass = env->GetObjectClass(descriptorObject);
+    jfieldID fieldDescriptorType = env->GetFieldID(descriptorClass, "type", "I");
+    ze_structure_type_t type = static_cast<ze_structure_type_t>(env->GetIntField(descriptorObject, fieldDescriptorType));
 
     ze_driver_handle_t driverHandle = reinterpret_cast<ze_driver_handle_t>(javaDriverHandler);
 
@@ -50,8 +50,8 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
         context = reinterpret_cast<ze_context_handle_t>(contextJavaArray[0]);
     }
 
-    jfieldID fieldDescriptorPointer = env->GetFieldID(DescriptorClass, "nativePointer", "J");
-    long valuePointerDescriptor = env->GetLongField(DescriptorObject, fieldDescriptorPointer);
+    jfieldID fieldDescriptorPointer = env->GetFieldID(descriptorClass, "nativePointer", "J");
+    long valuePointerDescriptor = env->GetLongField(descriptorObject, fieldDescriptorPointer);
 
     ze_context_desc_t contextDesc = {};
     ze_context_desc_t *contextDescPtr;
@@ -68,7 +68,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->ReleaseLongArrayElements(contextArray, contextJavaArray, 0);
 
     valuePointerDescriptor = reinterpret_cast<long>(&(contextDesc));
-    env->SetLongField(DescriptorObject, fieldDescriptorPointer, valuePointerDescriptor);
+    env->SetLongField(descriptorObject, fieldDescriptorPointer, valuePointerDescriptor);
 
     return result;
 }
@@ -96,27 +96,27 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     // Reconstruct commandQueueDescriptor
     ze_command_queue_desc_t cmdQueueDesc = {};
-    jclass commandDescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
-    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
+    jclass commanddescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
+    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
     long ptrZeCommandDescriptor = env->GetLongField(javaCommandQueueDescriptor, field);
     if (ptrZeCommandDescriptor != -1) {
         ze_command_queue_desc_t *cmdQueueDescPtr = reinterpret_cast<ze_command_queue_desc_t*>(ptrZeCommandDescriptor);
         cmdQueueDesc = *cmdQueueDescPtr;
     }
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     int type = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
     long ordinal = env->GetLongField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "index", "J");
+    field = env->GetFieldID(commanddescriptorClass, "index", "J");
     int index = env->GetLongField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "mode", "I");
+    field = env->GetFieldID(commanddescriptorClass, "mode", "I");
     int mode = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
+    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
     int priority = env->GetIntField(javaCommandQueueDescriptor, field);
 
     cmdQueueDesc.stype = static_cast<ze_structure_type_t>(type);
@@ -133,28 +133,28 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetLongField(javaCommandQueue, field, reinterpret_cast<jlong>(commandQueue));
 
     // Set command queue Descriptor
-    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(&cmdQueueDesc));
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.stype);
 
-    field = env->GetFieldID(commandDescriptorClass, "pNext", "J");
+    field = env->GetFieldID(commanddescriptorClass, "pNext", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(cmdQueueDesc.pNext));
 
-    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, cmdQueueDesc.ordinal);
 
-    field = env->GetFieldID(commandDescriptorClass, "index", "J");
+    field = env->GetFieldID(commanddescriptorClass, "index", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, cmdQueueDesc.index);
 
-    field = env->GetFieldID(commandDescriptorClass, "flags", "I");
+    field = env->GetFieldID(commanddescriptorClass, "flags", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.flags);
 
-    field = env->GetFieldID(commandDescriptorClass, "mode", "I");
+    field = env->GetFieldID(commanddescriptorClass, "mode", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.mode);
 
-    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
+    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.priority);
 
     return result;
@@ -183,18 +183,18 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     // Reconstruct command list Descriptor
     ze_command_list_desc_t cmdListDesc = {};
-    jclass commandDescriptorClass = env->GetObjectClass(javaCommandListDescriptor);
-    jfieldID field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandListDescriptor", "J");
+    jclass commanddescriptorClass = env->GetObjectClass(javaCommandListDescriptor);
+    jfieldID field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandListDescriptor", "J");
     long ptrZeCommandDescriptor = env->GetLongField(javaCommandListDescriptor, field);
     if (ptrZeCommandDescriptor != -1) {
         ze_command_list_desc_t *cmdListDescPtr = reinterpret_cast<ze_command_list_desc_t*>(ptrZeCommandDescriptor);
         cmdListDesc = *cmdListDescPtr;
     }
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     int type = env->GetIntField(javaCommandListDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "commandQueueGroupOrdinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "commandQueueGroupOrdinal", "J");
     long ordinal = env->GetLongField(javaCommandListDescriptor, field);
 
     cmdListDesc.stype = static_cast<ze_structure_type_t>(type);
@@ -208,19 +208,19 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetLongField(javaCommandList, field, reinterpret_cast<jlong>(commandList));
 
     // Set command queue Descriptor
-    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandListDescriptor", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandListDescriptor", "J");
     env->SetLongField(javaCommandListDescriptor, field, reinterpret_cast<jlong>(&cmdListDesc));
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     env->SetIntField(javaCommandListDescriptor, field, cmdListDesc.stype);
 
-    field = env->GetFieldID(commandDescriptorClass, "pNext", "J");
+    field = env->GetFieldID(commanddescriptorClass, "pNext", "J");
     env->SetLongField(javaCommandListDescriptor, field, reinterpret_cast<jlong>(cmdListDesc.pNext));
 
-    field = env->GetFieldID(commandDescriptorClass, "commandQueueGroupOrdinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "commandQueueGroupOrdinal", "J");
     env->SetLongField(javaCommandListDescriptor, field, cmdListDesc.commandQueueGroupOrdinal);
 
-    field = env->GetFieldID(commandDescriptorClass, "flags", "I");
+    field = env->GetFieldID(commanddescriptorClass, "flags", "I");
     env->SetIntField(javaCommandListDescriptor, field, cmdListDesc.flags);
 
     return result;
@@ -248,27 +248,27 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     // Reconstruct command queue Descriptor
     ze_command_queue_desc_t commandQueueDesc = {};
-    jclass commandDescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
-    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
+    jclass commanddescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
+    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
     long ptrZeCommandDescriptor = env->GetLongField(javaCommandQueueDescriptor, field);
     if (ptrZeCommandDescriptor != -1) {
         ze_command_queue_desc_t *cmdQueueDescPtr = reinterpret_cast<ze_command_queue_desc_t*>(ptrZeCommandDescriptor);
         commandQueueDesc = *cmdQueueDescPtr;
     }
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     int type = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
     long ordinal = env->GetLongField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "index", "J");
+    field = env->GetFieldID(commanddescriptorClass, "index", "J");
     int index = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "flags", "I");
+    field = env->GetFieldID(commanddescriptorClass, "flags", "I");
     int flags = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
+    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
     int priority = env->GetIntField(javaCommandQueueDescriptor, field);
 
     commandQueueDesc.stype = static_cast<ze_structure_type_t>(type);
@@ -285,28 +285,28 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetLongField(javaCommandList, field, reinterpret_cast<jlong>(commandList));
 
     // Set command queue Descriptor
-    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(&commandQueueDesc));
 
-    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
+    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.stype);
 
-    field = env->GetFieldID(commandDescriptorClass, "pNext", "J");
+    field = env->GetFieldID(commanddescriptorClass, "pNext", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(commandQueueDesc.pNext));
 
-    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, commandQueueDesc.ordinal);
 
-    field = env->GetFieldID(commandDescriptorClass, "index", "J");
+    field = env->GetFieldID(commanddescriptorClass, "index", "J");
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.index);
 
-    field = env->GetFieldID(commandDescriptorClass, "flags", "I");
+    field = env->GetFieldID(commanddescriptorClass, "flags", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.flags);
 
-    field = env->GetFieldID(commandDescriptorClass, "mode", "I");
+    field = env->GetFieldID(commanddescriptorClass, "mode", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.mode);
 
-    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
+    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.priority);
 
     return result;
