@@ -24,24 +24,37 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeHostMemAllocDesc {
+public class ZeKernelDescriptor {
 
     private int stype;
     private long pNext;
     private long flags;
+    private String kernelName;
 
-    private long ptrZeHostMemAllocDesc;
+    private long ptrZeKernelDesc;
 
-    public ZeHostMemAllocDesc() {
-        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_HOST_MEM_ALLOC_DESC;
-        this.ptrZeHostMemAllocDesc = -1;
+    public ZeKernelDescriptor() {
+        pNext = -1;
+        stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_KERNEL_DESC;
     }
 
-    public void setFlags(int flags) {
+    public void setType(int stype) {
+        this.stype = stype;
+    }
+
+    public void setNext(long pNext) {
+        this.pNext = pNext;
+    }
+
+    public void setFlags(long flags) {
         this.flags = flags;
     }
 
-    public int getStype() {
+    public void setKernelName(String kernelName) {
+        this.kernelName = kernelName;
+    }
+
+    public int getType() {
         return stype;
     }
 
@@ -53,7 +66,7 @@ public class ZeHostMemAllocDesc {
         return flags;
     }
 
-    public long getPtrZeHostMemAllocDesc() {
-        return ptrZeHostMemAllocDesc;
+    public String getKernelName() {
+        return kernelName;
     }
 }

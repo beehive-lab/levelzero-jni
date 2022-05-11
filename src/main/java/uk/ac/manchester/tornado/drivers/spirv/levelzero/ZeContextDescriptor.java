@@ -24,44 +24,33 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeCommandListDescription {
+public class ZeContextDescriptor extends ZeNativePointer {
 
-    private int stype;
+    private int type;
     private long pNext;
-    private long commandQueueGroupOrdinal;
     private int flags;
 
-    private long ptrZeCommandListDescription;
-
-    public ZeCommandListDescription() {
-        this.ptrZeCommandListDescription = -1;
+    public ZeContextDescriptor() {
+        this.type = Ze_Structure_Type.ZE_STRUCTURE_TYPE_CONTEXT_DESC;
     }
 
-    public int getStype() {
-        return stype;
-    }
-
-    public long getpNext() {
-        return pNext;
-    }
-
-    public long getCommandQueueGroupOrdinal() {
-        return commandQueueGroupOrdinal;
+    public long getNativePointer() {
+        return nativePointer;
     }
 
     public int getFlags() {
         return flags;
     }
 
-    public long getPtrZeCommandListDescription() {
-        return ptrZeCommandListDescription;
-    }
-
-    public void setCommandQueueGroupOrdinal(long ordinal) {
-        this.commandQueueGroupOrdinal = ordinal;
-    }
-
     public void setFlags(int flags) {
         this.flags = flags;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setSType(int type) {
+        this.type = type;
     }
 }

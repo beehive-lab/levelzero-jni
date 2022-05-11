@@ -27,7 +27,7 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 /**
  * Fence descriptor
  */
-public class ZeFenceDesc {
+public class ZeFenceDescriptor {
 
     private int stype;
     private long pNext;
@@ -35,7 +35,7 @@ public class ZeFenceDesc {
 
     private long ptrZeFenceDesc;
 
-    public ZeFenceDesc() {
+    public ZeFenceDescriptor() {
         pNext = -1;
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_FENCE_DESC;
     }

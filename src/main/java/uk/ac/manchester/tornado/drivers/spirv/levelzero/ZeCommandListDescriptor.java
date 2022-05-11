@@ -24,19 +24,17 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeDeviceMemAllocDesc {
+public class ZeCommandListDescriptor {
 
     private int stype;
     private long pNext;
-    private long flags;
-    private long ordinal;
+    private long commandQueueGroupOrdinal;
+    private int flags;
 
-    private long ptrZeDeviceMemAllocDesc;
+    private long ptrZeCommandListDescriptor;
 
-    public ZeDeviceMemAllocDesc() {
-        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_DEVICE_MEM_ALLOC_DESC;
-        this.ptrZeDeviceMemAllocDesc = -1;
-        this.pNext = -1;
+    public ZeCommandListDescriptor() {
+        this.ptrZeCommandListDescriptor = -1;
     }
 
     public int getStype() {
@@ -47,23 +45,23 @@ public class ZeDeviceMemAllocDesc {
         return pNext;
     }
 
-    public long getFlags() {
+    public long getCommandQueueGroupOrdinal() {
+        return commandQueueGroupOrdinal;
+    }
+
+    public int getFlags() {
         return flags;
     }
 
-    public long getOrdinal() {
-        return ordinal;
+    public long getPtrZeCommandListDescription() {
+        return ptrZeCommandListDescriptor;
     }
 
-    public long getPtrZeDeviceMemAllocDesc() {
-        return ptrZeDeviceMemAllocDesc;
+    public void setCommandQueueGroupOrdinal(long ordinal) {
+        this.commandQueueGroupOrdinal = ordinal;
     }
 
     public void setFlags(int flags) {
         this.flags = flags;
-    }
-
-    public void setOrdinal(int ordinal) {
-        this.ordinal = ordinal;
     }
 }

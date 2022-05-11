@@ -24,33 +24,68 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeContextDesc extends ZeNativePointer {
+/**
+ * Event Pool Descriptor
+ */
+public class ZeEventPoolDescriptor {
 
-    private int type;
+    /**
+     * [in] Type of this structure
+     */
+    private int stype;
+
+    /**
+     * [in][optional] pointer to extension-specific structure
+     */
     private long pNext;
+
+    /**
+     * [in] creation flags.
+     */
     private int flags;
 
-    public ZeContextDesc() {
-        this.type = Ze_Structure_Type.ZE_STRUCTURE_TYPE_CONTEXT_DESC;
+    /**
+     * Must be 0 (default) or a valid combination of {@link ZeEventPoolFlags}
+     * default behavior is signals and waits are visible to the entire device and
+     * peer devices.
+     */
+    private int count;
+
+    /**
+     * C pointer with event description
+     */
+    private long ptrZeEventPoolDescriptor;
+
+    public ZeEventPoolDescriptor() {
+        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_EVENT_POOL_DESC;
+        this.ptrZeEventPoolDescriptor = -1;
     }
 
-    public long getNativePointer() {
-        return nativePointer;
+    public int getStype() {
+        return stype;
     }
 
-    public int getFlags() {
-        return flags;
+    public long getpNext() {
+        return pNext;
     }
 
     public void setFlags(int flags) {
         this.flags = flags;
     }
 
-    public int getType() {
-        return type;
+    public int getFlags() {
+        return flags;
     }
 
-    public void setSType(int type) {
-        this.type = type;
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public long getPtrZeEventPoolDescription() {
+        return ptrZeEventPoolDescriptor;
     }
 }

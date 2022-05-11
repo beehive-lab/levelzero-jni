@@ -24,26 +24,22 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeModuleDesc {
+public class ZeCommandQueueDescriptor {
 
-    private final int stype;
+    private int stype;
     private long pNext;
-    private int format;
+    private long ordinal;
+    private long index;
 
-    private int inputSize;
-    private byte[] pInputModule;
-    private String pBuildFlags;
+    private int flags;
+    private int mode;
+    private int priority;
 
-    // Unfold ze_module_constants_t structure from level-zero
-    private int numConstants;
-    private long pConstantsIds;
-    private long pConstantValues;
+    private long ptrZeCommandDescriptor;
 
-    private long ptrZeModuleDesc;
-
-    public ZeModuleDesc() {
-        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_MODULE_DESC;
-        this.ptrZeModuleDesc = -1;
+    public ZeCommandQueueDescriptor() {
+        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC;
+        this.ptrZeCommandDescriptor = -1;
     }
 
     public int getStype() {
@@ -54,47 +50,43 @@ public class ZeModuleDesc {
         return pNext;
     }
 
-    public int getFormat() {
-        return format;
+    public long getOrdinal() {
+        return ordinal;
     }
 
-    public int getInputSize() {
-        return inputSize;
+    public long getIndex() {
+        return index;
     }
 
-    public byte[] getInputModule() {
-        return pInputModule;
+    public int getFlags() {
+        return flags;
     }
 
-    public String getpBuildFlags() {
-        return pBuildFlags;
+    public int getMode() {
+        return mode;
     }
 
-    public int getNumConstants() {
-        return numConstants;
+    public int getPriority() {
+        return priority;
     }
 
-    public long getpConstantsIds() {
-        return pConstantsIds;
+    public void setOrdinal(int ordinal) {
+        this.ordinal = ordinal;
     }
 
-    public long getpConstantValues() {
-        return pConstantValues;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
-    public void setFormat(int format) {
-        this.format = format;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
-    public void setInputSize(int inputSize) {
-        this.inputSize = inputSize;
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
-    public void setBuildFlags(String buildFlags) {
-        this.pBuildFlags = buildFlags;
-    }
-
-    public void setInputModule(byte[] inputModule) {
-        this.pInputModule = inputModule;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

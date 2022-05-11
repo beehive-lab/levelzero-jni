@@ -24,41 +24,19 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-/**
- * Event Pool Descriptor
- */
-public class ZeEventPoolDescription {
+public class ZeDeviceMemAllocDescriptor {
 
-    /**
-     * [in] Type of this structure
-     */
     private int stype;
-
-    /**
-     * [in][optional] pointer to extension-specific structure
-     */
     private long pNext;
+    private long flags;
+    private long ordinal;
 
-    /**
-     * [in] creation flags.
-     */
-    private int flags;
+    private long ptrZeDeviceMemAllocDesc;
 
-    /**
-     * Must be 0 (default) or a valid combination of {@link ZeEventPoolFlags}
-     * default behavior is signals and waits are visible to the entire device and
-     * peer devices.
-     */
-    private int count;
-
-    /**
-     * C pointer with event description
-     */
-    private long ptrZeEventPoolDescription;
-
-    public ZeEventPoolDescription() {
-        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_EVENT_POOL_DESC;
-        this.ptrZeEventPoolDescription = -1;
+    public ZeDeviceMemAllocDescriptor() {
+        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_DEVICE_MEM_ALLOC_DESC;
+        this.ptrZeDeviceMemAllocDesc = -1;
+        this.pNext = -1;
     }
 
     public int getStype() {
@@ -69,23 +47,23 @@ public class ZeEventPoolDescription {
         return pNext;
     }
 
+    public long getFlags() {
+        return flags;
+    }
+
+    public long getOrdinal() {
+        return ordinal;
+    }
+
+    public long getPtrZeDeviceMemAllocDesc() {
+        return ptrZeDeviceMemAllocDesc;
+    }
+
     public void setFlags(int flags) {
         this.flags = flags;
     }
 
-    public int getFlags() {
-        return flags;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public long getPtrZeEventPoolDescription() {
-        return ptrZeEventPoolDescription;
+    public void setOrdinal(int ordinal) {
+        this.ordinal = ordinal;
     }
 }
