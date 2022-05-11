@@ -27,17 +27,7 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 /**
  * Event Pool Descriptor
  */
-public class ZeEventPoolDescriptor {
-
-    /**
-     * [in] Type of this structure
-     */
-    private int stype;
-
-    /**
-     * [in][optional] pointer to extension-specific structure
-     */
-    private long pNext;
+public class ZeEventPoolDescriptor extends LevelZeroDescriptor {
 
     /**
      * [in] creation flags.

@@ -24,10 +24,8 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeCommandListDescriptor {
+public class ZeCommandListDescriptor extends LevelZeroDescriptor {
 
-    private int stype;
-    private long pNext;
     private long commandQueueGroupOrdinal;
     private int flags;
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021, APT Group, Department of Computer Science,
+ * Copyright (c) 2022, APT Group, Department of Computer Science,
  * The University of Manchester.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,67 +24,40 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeCommandQueueDescriptor extends LevelZeroDescriptor {
-
-    private long ordinal;
-    private long index;
+/**
+ * Relaxed limits memory allocation descriptor.
+ *
+ * - This structure may be passed to ::zeMemAllocShared or zeMemAllocDevice,
+ * via `pNext` member of {@link ZeDeviceMemAllocDescriptor}.
+ * - This structure may also be passed to ::zeMemAllocHost, via `pNext`
+ * member of {@link ZeHostMemAllocDescriptor}.
+ */
+public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor {
 
     private int flags;
-    private int mode;
-    private int priority;
 
-    private long ptrZeCommandDescriptor;
-
-    public ZeCommandQueueDescriptor() {
-        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC;
-        this.ptrZeCommandDescriptor = -1;
+    public ZeRelaxedAllocationLimitsExpDescriptor() {
+        pNext = -1;
+        stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_RELAXED_ALLOCATION_LIMITS_EXP_DESC;
     }
 
     public int getStype() {
-        return stype;
+        return this.stype;
     }
 
-    public long getpNext() {
-        return pNext;
-    }
-
-    public long getOrdinal() {
-        return ordinal;
-    }
-
-    public long getIndex() {
-        return index;
+    public long getPNext() {
+        return this.pNext;
     }
 
     public int getFlags() {
-        return flags;
-    }
-
-    public int getMode() {
-        return mode;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setOrdinal(int ordinal) {
-        this.ordinal = ordinal;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
+        return this.flags;
     }
 
     public void setFlags(int flags) {
         this.flags = flags;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setPNext(long pNextPtr) {
+        this.pNext = pNextPtr;
     }
 }

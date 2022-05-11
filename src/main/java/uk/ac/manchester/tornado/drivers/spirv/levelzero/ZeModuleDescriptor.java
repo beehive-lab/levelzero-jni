@@ -24,10 +24,8 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeModuleDescriptor {
+public class ZeModuleDescriptor extends LevelZeroDescriptor {
 
-    private final int stype;
-    private long pNext;
     private int format;
 
     private int inputSize;

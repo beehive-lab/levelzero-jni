@@ -27,10 +27,8 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 /**
  * Fence descriptor
  */
-public class ZeFenceDescriptor {
+public class ZeFenceDescriptor extends LevelZeroDescriptor {
 
-    private int stype;
-    private long pNext;
     private int flags;
 
     private long ptrZeFenceDesc;

@@ -24,42 +24,9 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-/**
- * Relaxed limits memory allocation descriptor.
- *
- * - This structure may be passed to ::zeMemAllocShared or zeMemAllocDevice,
- * via `pNext` member of {@link ZeDeviceMemAllocDescriptor}.
- * - This structure may also be passed to ::zeMemAllocHost, via `pNext`
- * member of {@link ZeHostMemAllocDescriptor}.
- */
-public class ZeRelaxedAllocationLimitsExpDesc {
+public abstract class LevelZeroDescriptor {
 
-    private int stype;
-    private long pNext;
-    private int flags;
+    protected int stype;
 
-    public ZeRelaxedAllocationLimitsExpDesc() {
-        pNext = -1;
-        stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_RELAXED_ALLOCATION_LIMITS_EXP_DESC;
-    }
-
-    public int getStype() {
-        return this.stype;
-    }
-
-    public long getPNext() {
-        return this.pNext;
-    }
-
-    public int getFlags() {
-        return this.flags;
-    }
-
-    public void setFlags(int flags) {
-        this.flags = flags;
-    }
-
-    public void setPNext(long pNextPtr) {
-        this.pNext = pNextPtr;
-    }
+    protected long pNext;
 }

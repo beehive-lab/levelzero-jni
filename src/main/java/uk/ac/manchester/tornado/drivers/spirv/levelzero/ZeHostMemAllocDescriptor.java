@@ -24,10 +24,8 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class ZeHostMemAllocDescriptor {
+public class ZeHostMemAllocDescriptor extends LevelZeroDescriptor {
 
-    private int stype;
-    private long pNext;
     private long flags;
 
     private long ptrZeHostMemAllocDesc;

@@ -39,7 +39,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     (JNIEnv *env, jobject object, jlong javaDriverHandler, jobject descriptorObject, jlongArray contextArray) {
 
     jclass descriptorClass = env->GetObjectClass(descriptorObject);
-    jfieldID fieldDescriptorType = env->GetFieldID(descriptorClass, "type", "I");
+    jfieldID fieldDescriptorType = env->GetFieldID(descriptorClass, "stype", "I");
     ze_structure_type_t type = static_cast<ze_structure_type_t>(env->GetIntField(descriptorObject, fieldDescriptorType));
 
     ze_driver_handle_t driverHandle = reinterpret_cast<ze_driver_handle_t>(javaDriverHandler);
