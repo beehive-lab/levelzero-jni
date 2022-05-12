@@ -152,9 +152,7 @@ public class TestLargeBuffer {
 
         final long allocSize = 6147483648l;
 
-        System.out.println("Allocating : " + (allocSize) + " (bytes) --> " + ((allocSize)*1e-9) + " (GBs)");
-
-        LevelZeroByteBuffer deviceBuffer = new LevelZeroByteBuffer();
+        LevelZeroByteBuffer sharedBuffer = new LevelZeroByteBuffer();
 
         LevelZeroCommandQueue commandQueue = createCommandQueue(context, device);
         LevelZeroCommandList commandList = createCommandList(context, device);
@@ -172,19 +170,33 @@ public class TestLargeBuffer {
 
         relaxedAllocationLimitsExpDescriptor.materialize();
 
+        // These two lines allow us to use the extended memory allocation mode by appending the extended memory descriptor
+        // to the device and host memory descriptors.
         deviceMemAllocDesc.setNext(relaxedAllocationLimitsExpDescriptor);
         hostMemAllocDesc.setNext(relaxedAllocationLimitsExpDescriptor);
-
-
-        // This is the equivalent of a clCreateBuffer
-        int result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), deviceBuffer);
+        
+        System.out.println("Allocating SHARED: " + (allocSize) + " (bytes) --> " + ((allocSize)*1e-9) + " (GBs)");
+        int result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), sharedBuffer);
         LevelZeroUtils.errorLog("zeMemAllocShared", result);
 
+        LevelZeroByteBuffer deviceBuffer = new LevelZeroByteBuffer();
+        System.out.println("Allocating DEVICE: " + (allocSize) + " (bytes) --> " + ((allocSize)*1e-9) + " (GBs)");
+        result = context.zeMemAllocDevice(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), deviceBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocDevice", result);
+
+        LevelZeroByteBuffer hostBuffer = new LevelZeroByteBuffer();
+        System.out.println("Allocating HOST: " + (allocSize) + " (bytes) --> " + ((allocSize)*1e-9) + " (GBs)");
+        result = context.zeMemAllocHost(context.getContextHandle().getContextPtr()[0], hostMemAllocDesc, allocSize, alignment, hostBuffer);
+        LevelZeroUtils.errorLog("zeMemAllocHost", result);
+
         // Free resources
+        context.zeMemFree(context.getDefaultContextPtr(), sharedBuffer);
         context.zeMemFree(context.getDefaultContextPtr(), deviceBuffer);
+        context.zeMemFree(context.getDefaultContextPtr(), hostBuffer);
         context.zeCommandListDestroy(commandList.getCommandListHandler());
         context.zeCommandQueueDestroy(commandQueue.getCommandQueueHandle());
         System.out.println("OK ");
+
      }
 
     public static void main(String[] args) {
@@ -198,6 +210,8 @@ public class TestLargeBuffer {
         System.out.println("\tVendor ID: " + Integer.toHexString(deviceProperties.getVendorId()));
 
         testAppendMemoryCopyFromHeapToDeviceToHeap(context, device);
+
+        driver.zeContextDestroy(context);
     }
 
 }
