@@ -6,7 +6,7 @@ Baremetal GPU and FPGA programming for Java using the [LevelZero API](https://sp
 This project is a Java Native Interface (JNI) binding for Intel's Level Zero. This library is as designed to be as closed as possible to the LevelZero API for C++. 
 
 
-Subset of LevelZero 1.2.2 supported (LevelZero Feb 2021 version)
+Subset of LevelZero 1.4.0 supported (Level Zero May 2022 version)
 
 
 ## Compilation & Configuration of the JNI Level-Zero API 
@@ -32,10 +32,10 @@ $ cmake --build . --config Release --target package
 Set the paths to the directory of Level-Zero installation. Here's an example:
 
 ```bash
-$ scl enable devtoolset-9 bash # Only for CentOS
-$ export CPLUS_INCLUDE_PATH=/home/juan/manchester/SPIRV/level-zero/include:$CPLUS_INCLUDE_PATH
-$ export LD_LIBRARY_PATH=/home/juan/manchester/SPIRV/level-zero/build/lib:$LD_LIBRARY_PATH 
-$ export ZE_SHARED_LOADER="/home/juan/manchester/SPIRV/level-zero/build/lib/libze_loader.so"
+$ scl enable devtoolset-9 bash # << Only for CentOS
+$ export CPLUS_INCLUDE_PATH=/path/to/level-zero/include:$CPLUS_INCLUDE_PATH
+$ export LD_LIBRARY_PATH=/path/to/level-zero/build/lib:$LD_LIBRARY_PATH 
+$ export ZE_SHARED_LOADER="/path/to/level-zero/build/lib/libze_loader.so"
 $ cd levelZeroLib
 $ mkdir build
 $ cd build
@@ -47,9 +47,9 @@ $ make
 
 
 ```bash
-$ ./scripts/compileAndRun.sh
+$ mvn clean package
+$ ./scripts/run.sh
 ```
-
 
 Note: For running with SPIR-V (example by default), the test program reads a SPIR-V kernel from `/tmp/example.spv`.
 
@@ -73,7 +73,7 @@ $ mv opencl-copy.spv /tmp/opencl-copy.spv
 ```
 
 
-The clang implementation I'm currently using is the `intel/llvm`: https://github.com/intel/llvm 
+The `clang` implementation we are currently using is the `intel/llvm`: https://github.com/intel/llvm 
 
 
 To run:
