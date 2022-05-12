@@ -174,7 +174,7 @@ public class TestLargeBuffer {
         // to the device and host memory descriptors.
         deviceMemAllocDesc.setNext(relaxedAllocationLimitsExpDescriptor);
         hostMemAllocDesc.setNext(relaxedAllocationLimitsExpDescriptor);
-        
+
         System.out.println("Allocating SHARED: " + (allocSize) + " (bytes) --> " + ((allocSize)*1e-9) + " (GBs)");
         int result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, allocSize, alignment, device.getDeviceHandlerPtr(), sharedBuffer);
         LevelZeroUtils.errorLog("zeMemAllocShared", result);
@@ -213,5 +213,4 @@ public class TestLargeBuffer {
 
         driver.zeContextDestroy(context);
     }
-
 }
