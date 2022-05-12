@@ -43,18 +43,21 @@ $ cmake ..
 $ make 
 ```
 
+##### 2.1 Obtain the LLVM-SPIRV Compiler (optional)
+
+In case you want to compile from OpenCL C to SPIR-V to use the Level Zero library, you need the `llvm-spirv` compiler.
+The implementation we are currently using is the `intel/llvm`: https://github.com/intel/llvm 
+
+
 ### 3) Compile & Run a Java test
 
 
 ```bash
 $ mvn clean package
-$ ./scripts/run.sh
+$ ./scripts/run.sh   ## < This script compiles an OpenCL C program to SPIR-V using the llvm-spirv compiler (see 2.1)
 ```
 
-Note: For running with SPIR-V (example by default), the test program reads a SPIR-V kernel from `/tmp/example.spv`.
-
-
-The OpenCL kernel is as follows:
+The OpenCL C kernel provided for this example is as follows:
 
 
 ```c
@@ -64,22 +67,12 @@ __kernel void copydata(__global int* input, __global int* output) {
 }
 ```
 
-To compile to SPIR-V:
+To compile from OpenCL C to SPIR-V:
 
 ```bash
 $ clang -cc1 -triple spir copy_data.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
 $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
 $ mv opencl-copy.spv /tmp/opencl-copy.spv
-```
-
-
-The `clang` implementation we are currently using is the `intel/llvm`: https://github.com/intel/llvm 
-
-
-To run:
-
-```bash
-$ java -Djava.library.path=./levelZeroLib/build -cp target/levelzero-1.0-SNAPSHOT.jar uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
 ```
 
 ## License
