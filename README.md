@@ -43,9 +43,9 @@ $ cmake ..
 $ make 
 ```
 
-##### 2.1 Obtain the LLVM-SPIRV Compiler (optional)
+##### 2.1 Obtain the LLVM-SPIRV Compiler
 
-In case you want to compile from OpenCL C to SPIR-V to use the Level Zero library, you need the `llvm-spirv` compiler.
+In case you want to compile kernels from OpenCL C to SPIR-V to use the Level Zero library, you need the `llvm-spirv` compiler.
 The implementation we are currently using is the `intel/llvm`: https://github.com/intel/llvm 
 
 
