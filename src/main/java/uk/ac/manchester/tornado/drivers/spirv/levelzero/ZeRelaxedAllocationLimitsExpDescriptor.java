@@ -27,9 +27,9 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 /**
  * Relaxed limits memory allocation descriptor.
  *
- * - This structure may be passed to ::zeMemAllocShared or zeMemAllocDevice,
+ * - This structure may be passed to `zeMemAllocShared` or `zeMemAllocDevice`,
  * via `pNext` member of {@link ZeDeviceMemAllocDescriptor}.
- * - This structure may also be passed to ::zeMemAllocHost, via `pNext`
+ * - This structure may also be passed to `zeMemAllocHost`, via `pNext`
  * member of {@link ZeHostMemAllocDescriptor}.
  */
 public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor {
@@ -46,7 +46,7 @@ public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor 
 
     @Override
     public void materialize() {
-        // Native Call to object the selfPtr for the current object
+        // Native Call to fill with content of the selfPtr for the current object
         materializeNative_ZeRelaxedAllocationLimitsExpDescriptor();
     }
 

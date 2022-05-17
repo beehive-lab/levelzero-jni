@@ -27,9 +27,9 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 public class ZeRelaxedAllocationLimitsFlags {
 
     /**
-     * Allocation size may exceed ::ze_device_properties_t.maxMemAllocSize
+     * Allocation size may exceed {@link ZeDeviceProperties#maxMemAllocSize}
      */
     public static final int ZE_RELAXED_ALLOCATION_LIMITS_EXP_FLAG_MAX_SIZE = ZeConstants.ZE_BIT(0);
 
-    public static final int ZE_RELAXED_ALLOCATION_LIMITS_EXP_FLAG_FORCE_UINT32 =  0x7fffffff;
+    public static final int ZE_RELAXED_ALLOCATION_LIMITS_EXP_FLAG_FORCE_UINT32 =  ZeConstants.ZE_FORCE;
 }

@@ -52,6 +52,12 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 public class TestLargeBuffer {
 
+    /**
+     * 6GB Allocation
+     */
+    private static final long SIZE = 6147483648l;
+
+
     public static LevelZeroContext zeInitContext(LevelZeroDriver driver) {
         if (driver == null) {
             return null;
@@ -150,7 +156,7 @@ public class TestLargeBuffer {
 
     public static void testAppendMemoryCopyFromHeapToDeviceToHeap(LevelZeroContext context, LevelZeroDevice device) {
 
-        final long allocSize = 6147483648l;
+        final long allocSize = SIZE;
 
         LevelZeroByteBuffer sharedBuffer = new LevelZeroByteBuffer();
 

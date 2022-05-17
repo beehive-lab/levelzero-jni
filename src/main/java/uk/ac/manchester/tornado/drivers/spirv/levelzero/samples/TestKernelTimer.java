@@ -226,7 +226,7 @@ public class TestKernelTimer {
         LevelZeroUtils.errorLog("zeCommandListAppendMemoryPrefetch", result);
 
         result = commandList.zeCommandListAppendMemAdvise(commandList.getCommandListHandlerPtr(), device.getDeviceHandlerPtr(), bufferA, bufferSize, ZeMemoryAdvice.ZE_MEMORY_ADVICE_SET_PREFERRED_LOCATION);
-        LevelZeroUtils.errorLog("zeCommandListAppendMemoryPrefetch", result);
+        LevelZeroUtils.errorLog("zeCommandListAppendMemAdvise", result);
 
         bufferA.memset(100, elements);
         bufferB.memset(0, elements);

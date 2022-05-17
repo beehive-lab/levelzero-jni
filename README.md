@@ -33,9 +33,9 @@ Set the paths to the directory of Level-Zero installation. Here's an example:
 
 ```bash
 $ scl enable devtoolset-9 bash # << Only for CentOS
-$ export CPLUS_INCLUDE_PATH=/path/to/level-zero/include:$CPLUS_INCLUDE_PATH
-$ export LD_LIBRARY_PATH=/path/to/level-zero/build/lib:$LD_LIBRARY_PATH 
-$ export ZE_SHARED_LOADER="/path/to/level-zero/build/lib/libze_loader.so"
+$ export CPLUS_INCLUDE_PATH=<path-to-levelzero>/include:$CPLUS_INCLUDE_PATH
+$ export LD_LIBRARY_PATH=<path-to-levelzero>/build/lib:$LD_LIBRARY_PATH 
+$ export ZE_SHARED_LOADER="<path-to-levelzero>/build/lib/libze_loader.so"
 $ cd levelZeroLib
 $ mkdir build
 $ cd build
@@ -45,8 +45,8 @@ $ make
 
 ##### 2.1 Obtain the LLVM-SPIRV Compiler
 
-In case you want to compile kernels from OpenCL C to SPIR-V to use the Level Zero library, you need the `llvm-spirv` compiler.
-The implementation we are currently using is the `intel/llvm`: https://github.com/intel/llvm 
+In case you want to compile kernels from OpenCL C to SPIR-V and use the Level Zero library, you need to download the `llvm-spirv` compiler.
+The implementation we are currently using is the `intel/llvm`: [https://github.com/intel/llvm](https://github.com/intel/llvm).
 
 
 ### 3) Compile & Run a Java test

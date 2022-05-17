@@ -96,27 +96,27 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     // Reconstruct commandQueueDescriptor
     ze_command_queue_desc_t cmdQueueDesc = {};
-    jclass commanddescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
-    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
+    jclass commandDescriptorClass = env->GetObjectClass(javaCommandQueueDescriptor);
+    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
     long ptrZeCommandDescriptor = env->GetLongField(javaCommandQueueDescriptor, field);
     if (ptrZeCommandDescriptor != -1) {
         ze_command_queue_desc_t *cmdQueueDescPtr = reinterpret_cast<ze_command_queue_desc_t*>(ptrZeCommandDescriptor);
         cmdQueueDesc = *cmdQueueDescPtr;
     }
 
-    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
+    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
     int type = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
     long ordinal = env->GetLongField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commanddescriptorClass, "index", "J");
+    field = env->GetFieldID(commandDescriptorClass, "index", "J");
     int index = env->GetLongField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commanddescriptorClass, "mode", "I");
+    field = env->GetFieldID(commandDescriptorClass, "mode", "I");
     int mode = env->GetIntField(javaCommandQueueDescriptor, field);
 
-    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
+    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
     int priority = env->GetIntField(javaCommandQueueDescriptor, field);
 
     cmdQueueDesc.stype = static_cast<ze_structure_type_t>(type);
@@ -133,28 +133,28 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetLongField(javaCommandQueue, field, reinterpret_cast<jlong>(commandQueue));
 
     // Set command queue Descriptor
-    field = env->GetFieldID(commanddescriptorClass, "ptrZeCommandDescriptor", "J");
+    field = env->GetFieldID(commandDescriptorClass, "ptrZeCommandDescriptor", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(&cmdQueueDesc));
 
-    field = env->GetFieldID(commanddescriptorClass, "stype", "I");
+    field = env->GetFieldID(commandDescriptorClass, "stype", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.stype);
 
-    field = env->GetFieldID(commanddescriptorClass, "pNext", "J");
+    field = env->GetFieldID(commandDescriptorClass, "pNext", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(cmdQueueDesc.pNext));
 
-    field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
+    field = env->GetFieldID(commandDescriptorClass, "ordinal", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, cmdQueueDesc.ordinal);
 
-    field = env->GetFieldID(commanddescriptorClass, "index", "J");
+    field = env->GetFieldID(commandDescriptorClass, "index", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, cmdQueueDesc.index);
 
-    field = env->GetFieldID(commanddescriptorClass, "flags", "I");
+    field = env->GetFieldID(commandDescriptorClass, "flags", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.flags);
 
-    field = env->GetFieldID(commanddescriptorClass, "mode", "I");
+    field = env->GetFieldID(commandDescriptorClass, "mode", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.mode);
 
-    field = env->GetFieldID(commanddescriptorClass, "priority", "I");
+    field = env->GetFieldID(commandDescriptorClass, "priority", "I");
     env->SetIntField(javaCommandQueueDescriptor, field, cmdQueueDesc.priority);
 
     return result;
