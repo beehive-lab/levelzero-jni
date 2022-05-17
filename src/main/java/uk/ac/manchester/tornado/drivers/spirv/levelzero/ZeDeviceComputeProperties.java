@@ -26,7 +26,7 @@ package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
 import java.util.Arrays;
 
-public class ZeComputeProperties {
+public class ZeDeviceComputeProperties {
 
     private int type;
     private long pNext;
@@ -43,7 +43,7 @@ public class ZeComputeProperties {
 
     private int[] subGroupSizes;
 
-    public ZeComputeProperties() {
+    public ZeDeviceComputeProperties() {
         type = Ze_Structure_Type.ZE_STRUCTURE_TYPE_DEVICE_COMPUTE_PROPERTIES;
     }
 

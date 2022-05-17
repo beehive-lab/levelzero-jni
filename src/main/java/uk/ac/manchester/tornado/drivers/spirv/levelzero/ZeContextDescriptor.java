@@ -24,31 +24,36 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class LevelZeroBufferInteger {
+public class ZeContextDescriptor extends LevelZeroDescriptor {
 
-    private long ptrBuffer;
+    private int flags;
+    private long nativePointer;
 
-    public LevelZeroBufferInteger() {
-        this.ptrBuffer = -1;
+    public ZeContextDescriptor() {
+        this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_CONTEXT_DESC;
+        this.nativePointer = -1;
     }
 
-    public long getPtrBuffer() {
-        return ptrBuffer;
+    private native void materializeNative_ZeContextDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeContextDescriptor();
     }
 
-    public void memset(int value, long bufferSize) {
-        memset_native(this, value, bufferSize);
+    public int getFlags() {
+        return flags;
     }
 
-    public boolean isEqual(LevelZeroBufferInteger bufferB, int size) {
-        return isEqual(this.ptrBuffer, bufferB.getPtrBuffer(), size);
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
-    public void initPtr() {
-        this.ptrBuffer = -1;
+    public int getType() {
+        return stype;
     }
 
-    native void memset_native(LevelZeroBufferInteger javaBuffer, int value, long bufferSize);
-
-    native boolean isEqual(long bufferAPtr, long bufferBPtr, long size);
+    public void setSType(int type) {
+        this.stype = type;
+    }
 }

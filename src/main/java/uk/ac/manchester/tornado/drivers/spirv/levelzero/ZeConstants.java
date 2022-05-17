@@ -30,6 +30,8 @@ public class ZeConstants {
         return 1 << value;
     }
 
+    public static final int ZE_FORCE =  0x7fffffff;
+
     private ZeConstants() {
     }
 }

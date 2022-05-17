@@ -24,31 +24,44 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class LevelZeroBufferInteger {
+/**
+ * Fence descriptor
+ */
+public class ZeFenceDescriptor extends LevelZeroDescriptor {
 
-    private long ptrBuffer;
+    private int flags;
 
-    public LevelZeroBufferInteger() {
-        this.ptrBuffer = -1;
+    private long ptrZeFenceDesc;
+
+    public ZeFenceDescriptor() {
+        pNext = -1;
+        stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_FENCE_DESC;
     }
 
-    public long getPtrBuffer() {
-        return ptrBuffer;
+    private native void materializeNative_ZeFenceDescriptor();
+
+    @Override
+    public void materialize() {
+        materializeNative_ZeFenceDescriptor();
     }
 
-    public void memset(int value, long bufferSize) {
-        memset_native(this, value, bufferSize);
+    public int getStype() {
+        return stype;
     }
 
-    public boolean isEqual(LevelZeroBufferInteger bufferB, int size) {
-        return isEqual(this.ptrBuffer, bufferB.getPtrBuffer(), size);
+    public long getpNext() {
+        return pNext;
     }
 
-    public void initPtr() {
-        this.ptrBuffer = -1;
+    public int getFlags() {
+        return flags;
     }
 
-    native void memset_native(LevelZeroBufferInteger javaBuffer, int value, long bufferSize);
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
 
-    native boolean isEqual(long bufferAPtr, long bufferBPtr, long size);
+    public long getPtrZeFenceDesc() {
+        return ptrZeFenceDesc;
+    }
 }

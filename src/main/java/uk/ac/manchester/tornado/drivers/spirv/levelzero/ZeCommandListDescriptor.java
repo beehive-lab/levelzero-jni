@@ -24,31 +24,49 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class LevelZeroBufferInteger {
+public class ZeCommandListDescriptor extends LevelZeroDescriptor {
 
-    private long ptrBuffer;
+    private long commandQueueGroupOrdinal;
+    private int flags;
 
-    public LevelZeroBufferInteger() {
-        this.ptrBuffer = -1;
+    private long ptrZeCommandListDescriptor;
+
+    public ZeCommandListDescriptor() {
+        this.ptrZeCommandListDescriptor = -1;
     }
 
-    public long getPtrBuffer() {
-        return ptrBuffer;
+
+    private native void materializeNative_ZeCommandListDescriptor();
+    @Override
+    public void materialize() {
+        materializeNative_ZeCommandListDescriptor();
     }
 
-    public void memset(int value, long bufferSize) {
-        memset_native(this, value, bufferSize);
+    public int getStype() {
+        return stype;
     }
 
-    public boolean isEqual(LevelZeroBufferInteger bufferB, int size) {
-        return isEqual(this.ptrBuffer, bufferB.getPtrBuffer(), size);
+    public long getpNext() {
+        return pNext;
     }
 
-    public void initPtr() {
-        this.ptrBuffer = -1;
+    public long getCommandQueueGroupOrdinal() {
+        return commandQueueGroupOrdinal;
     }
 
-    native void memset_native(LevelZeroBufferInteger javaBuffer, int value, long bufferSize);
+    public int getFlags() {
+        return flags;
+    }
 
-    native boolean isEqual(long bufferAPtr, long bufferBPtr, long size);
+    public long getPtrZeCommandListDescription() {
+        return ptrZeCommandListDescriptor;
+    }
+
+    public void setCommandQueueGroupOrdinal(long ordinal) {
+        this.commandQueueGroupOrdinal = ordinal;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
 }
