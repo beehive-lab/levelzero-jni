@@ -1,4 +1,4 @@
-# LevelZero JNI 
+# Beehive LevelZero JNI 
 
 Baremetal GPU and FPGA programming for Java using the [LevelZero API](https://spec.oneapi.io/level-zero/latest/index.html). 
 

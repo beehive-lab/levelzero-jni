@@ -1,3 +1,12 @@
+## Beehive LevelZero-JNI 0.1.2 
+12/12/23
+
+- Multiple SPIR-V Devices Fixed: [commit](https://github.com/beehive-lab/levelzero-jni/commit/fe20b18c9623b4d0533ee50d878b266ecdce46dc)
+- Support for data send/receive using Panama off-heap buffers 
+- Use `-O2` optimization: [commit](https://github.com/beehive-lab/levelzero-jni/commit/721b8aed7ac4e419843b3029be99c11267eeb32c)
+- Fix `string` release in JNI code: [commit](https://github.com/beehive-lab/levelzero-jni/commit/3c6d463ebafbf9d2de7be128f79483ff28c5ace6)
+- Fix Device properties: [commit](https://github.com/beehive-lab/levelzero-jni/commit/83c2e032197e2f8a13d895d2b75f72693424bd7b)
+
 ## LevelZero-JNI 0.1.1
 10/03/2022
 
