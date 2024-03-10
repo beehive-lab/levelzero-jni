@@ -260,7 +260,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     if (javaMemoryPropertiesArray != nullptr) {
         // set the values back to Java
+#ifdef _WIN32
+        for (int64_t i = 0; i < memoryCount; i++) {
+#else
         for (int i = 0; i < memoryCount; i++) {
+#endif
             jobject javaMemoryProperty = static_cast<jobject>(env->GetObjectArrayElement(javaMemoryPropertiesArray, i));
             jclass descriptionClass = env->GetObjectClass(javaMemoryProperty);
             jfieldID field = env->GetFieldID(descriptionClass, "type", "I");
@@ -366,7 +370,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     if (javaCachePropertiesArray != nullptr) {
         // set the values back to Java
+#ifdef _WIN32
+        for (int64_t i = 0; i < cacheCount; i++) {
+#else
         for (int i = 0; i < cacheCount; i++) {
+#endif
             jobject javaMemoryProperty = static_cast<jobject>(env->GetObjectArrayElement(javaCachePropertiesArray, i));
             jclass descriptionClass = env->GetObjectClass(javaMemoryProperty);
             jfieldID field = env->GetFieldID(descriptionClass, "type", "I");
@@ -402,10 +410,18 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jfieldID fieldType = env->GetFieldID(descriptionClass, "stype", "I");
     ze_structure_type_t type = static_cast<ze_structure_type_t>(env->GetIntField(javaDeviceModuleProperties, fieldType));
     jfieldID fieldPNext = env->GetFieldID(descriptionClass, "pNext", "J");
+#ifdef _WIN32
+    int64_t pNext = static_cast<int64_t>(env->GetLongField(javaDeviceModuleProperties, fieldPNext));
+#else
     long pNext = static_cast<long>(env->GetLongField(javaDeviceModuleProperties, fieldPNext));
+#endif
     void* ptrNext = nullptr;
     if (pNext != -1) {
+#ifdef _WIN32
+        ptrNext = reinterpret_cast<int64_t *>(pNext);
+#else
         ptrNext = reinterpret_cast<void *>(pNext);
+#endif
     }
 
     ze_device_module_properties_t deviceModuleProperties;
@@ -475,7 +491,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     LOG_ZE_JNI("zeDeviceGetCommandQueueGroupProperties", result);
 
     if (javaQueuePropertiesArray != nullptr) {
+#ifdef _WIN32
+        for (int64_t i = 0; i < numQueueGroups; i++) {
+#else
         for (int i = 0; i < numQueueGroups; i++) {
+#endif
             jobject javaMemoryProperty = static_cast<jobject>(env->GetObjectArrayElement(javaQueuePropertiesArray, i));
             jclass descriptionClass = env->GetObjectClass(javaMemoryProperty);
             jfieldID field = env->GetFieldID(descriptionClass, "type", "I");

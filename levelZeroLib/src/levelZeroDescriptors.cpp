@@ -49,7 +49,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeD
             ordinal
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -73,7 +77,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             flags,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -98,7 +106,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             flags
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(exceedCapacity);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(exceedCapacity);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -126,7 +138,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             count,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -154,7 +170,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             flags,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -178,7 +198,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             flags,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -207,7 +231,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             pKernelName,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
     env->ReleaseStringUTFChars(javaString, pKernelName);
@@ -248,7 +276,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             static_cast<ze_command_queue_priority_t>(priority)
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -270,7 +302,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
 
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -302,7 +338,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             wait,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }
@@ -326,7 +366,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeR
             flags,
     };
 
+#ifdef _WIN32
+    int64_t ptrToStruct = reinterpret_cast<int64_t>(descriptor);
+#else
     ulong ptrToStruct = reinterpret_cast<ulong>(descriptor);
+#endif
     jfieldID fieldSelfPTr = env->GetFieldID(classDescriptor, "selfPtr", "J");
     env->SetLongField(thisObject, fieldSelfPTr, ptrToStruct);
 }

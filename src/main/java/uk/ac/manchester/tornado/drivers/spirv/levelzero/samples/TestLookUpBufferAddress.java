@@ -44,19 +44,32 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 /**
- * How to run?
+ * Kernel to test:
  *
  * <code>
  *     __kernel void lookUp(__global long *heap, __global long* output) {
  *           output[get_global_id(0)]  =  (ulong) heap;
  *      }
+ *    }
  * </code>
  *
+ *
+ * To compile to SPIR-V:
+ *
  * <code>
- * $ tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLookUpBufferAddress
+ *     $ clang -cc1 -triple spir lookUpBufferAddress.cl -O0 -finclude-default-header -emit-llvm-bc -o lookUpBufferAddress.bc
+ *     $ llvm-spirv lookUpBufferAddress.bc -o lookUpBufferAddress.spv
+ * </code>
+ *
+ *
+ * How to run?
+ *
+ * <code>
+ *     $ tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLookUpBufferAddress lookUpBufferAddress.spv
  * </code>
  */
 public class TestLookUpBufferAddress {
+    private static String[] args;
 
     private static void dispatchLookUpBuffer(LevelZeroCommandList commandList, LevelZeroCommandQueue commandQueue, LevelZeroKernel levelZeroKernel, LevelZeroByteBuffer deviceBuffer,
             LevelZeroByteBuffer bufferB, long[] output, int bufferSize) {
@@ -140,7 +153,7 @@ public class TestLookUpBufferAddress {
         result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
         LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
 
-        LevelZeroKernel levelZeroKernel = LevelZeroUtils.compileSPIRVKernel(device, context, "lookUp", "/home/juan/manchester/tornado/tornado/assembly/src/bin/spirv/lookUpBufferAddress.spv");
+        LevelZeroKernel levelZeroKernel = LevelZeroUtils.compileSPIRVKernel(device, context, "lookUp", args[0]);
         dispatchLookUpBuffer(commandList, commandQueue, levelZeroKernel, deviceBuffer, bufferB, output, bufferSize);
 
         result = commandList.zeCommandListReset(commandList.getCommandListHandlerPtr());
@@ -165,6 +178,7 @@ public class TestLookUpBufferAddress {
      * @param args
      */
     public static void main(String[] args) {
+        TestLookUpBufferAddress.args = args;
         LevelZeroDriver driver = new LevelZeroDriver();
         LevelZeroContext context = LevelZeroUtils.zeInitContext(driver);
         LevelZeroDevice device = LevelZeroUtils.zeGetDevices(context, driver);

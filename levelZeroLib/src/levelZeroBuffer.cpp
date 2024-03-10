@@ -140,7 +140,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jbyte *offHeapByteArray = static_cast<jbyte *>(buffer);
     jbyte *arrayByte = env->GetByteArrayElements(javaArray, 0);
     int size = env->GetArrayLength(javaArray);
+#ifdef _WIN32
+    _memccpy(offHeapByteArray, arrayByte, 0, size);
+#else
     memccpy(offHeapByteArray, arrayByte, 0, size);
+#endif
 }
 
 /*
@@ -169,10 +173,17 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jfieldID fieldPointer = env->GetFieldID(klass, "ptrBuffer", "J");
     jlong ptr = env->GetLongField(javaBufferObject, fieldPointer);
 
+#ifdef _WIN32
+    int64_t *buffer = nullptr;
+    if (ptr != -1) {
+        buffer = reinterpret_cast<int64_t *>(ptr);
+    }
+#else
     long *buffer = nullptr;
     if (ptr != -1) {
         buffer = reinterpret_cast<long *>(ptr);
     }
+#endif
     for (int i = 0; i < size; i++) {
         buffer[i] = value;
     }
@@ -217,7 +228,11 @@ JNIEXPORT void JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jlong *offHeapByteArray = static_cast<jlong *>(buffer);
     jlong *arrayByte = env->GetLongArrayElements(array, 0);
     int size = env->GetArrayLength(array);
+#ifdef _WIN32
+    _memccpy(offHeapByteArray, arrayByte, 0, size);
+#else
     memccpy(offHeapByteArray, arrayByte, 0, size);
+#endif
 }
 
 /*

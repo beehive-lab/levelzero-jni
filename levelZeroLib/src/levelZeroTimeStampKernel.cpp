@@ -50,16 +50,31 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_ZeK
     // Set fields for Java Event Handle
     jclass eventHandleClass = env->GetObjectClass(javaZeTimeKernelStampResult);
     jfieldID field = env->GetFieldID(eventHandleClass, "globalKernelStart", "J");
+#ifdef _WIN32
+    env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t&>(kernelTsResults->global.kernelStart));
+#else
     env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t>(kernelTsResults->global.kernelStart));
-
+#endif
     field = env->GetFieldID(eventHandleClass, "globalKernelEnd", "J");
+#ifdef _WIN32
+    env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t&>(kernelTsResults->global.kernelEnd));
+#else
     env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t>(kernelTsResults->global.kernelEnd));
+#endif
 
     field = env->GetFieldID(eventHandleClass, "contextKernelStart", "J");
+#ifdef _WIN32
+    env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t&>(kernelTsResults->context.kernelStart));
+#else
     env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t>(kernelTsResults->context.kernelStart));
+#endif
 
     field = env->GetFieldID(eventHandleClass, "contextKernelEnd", "J");
+#ifdef _WIN32
+    env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t&>(kernelTsResults->context.kernelEnd));
+#else
     env->SetLongField(javaZeTimeKernelStampResult, field, reinterpret_cast<uint64_t>(kernelTsResults->context.kernelEnd));
+#endif
 
     return 1;
 }

@@ -124,7 +124,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
         numDevices[0] = deviceCountNumber;
     } else {
         // Update object javaDeviceHandler
+#ifdef _WIN32
+        for (int64_t i = 0; i < deviceCountNumber; i++) {
+#else
         for (int i = 0; i < deviceCountNumber; i++) {
+#endif
             deviceHandlerArray[i] = reinterpret_cast<jlong>(*(&(deviceHandler) + i));
         }
         env->SetIntField(javaDeviceHandler, fieldNumDevices, deviceCountNumber);
@@ -147,7 +151,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     jclass descriptionClass = env->GetObjectClass(javaDriverProperties);
     jfieldID fieldDescriptorPointer = env->GetFieldID(descriptionClass, "nativePointer", "J");
+#ifdef _WIN32
+    int64_t valuePointerDescriptor = env->GetLongField(javaDriverProperties, fieldDescriptorPointer);
+#else
     long valuePointerDescriptor = env->GetLongField(javaDriverProperties, fieldDescriptorPointer);
+#endif
 
     jfieldID fieldDescriptorType = env->GetFieldID(descriptionClass, "type", "I");
     auto type = static_cast<ze_structure_type_t>(env->GetIntField(javaDriverProperties, fieldDescriptorType));
@@ -164,7 +172,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     ze_result_t  result = zeDriverGetProperties(driver, &driverProperties);
     LOG_ZE_JNI("zeDriverGetProperties", result);
 
+#ifdef _WIN32
+    valuePointerDescriptor = reinterpret_cast<int64_t>(&(driverProperties));
+#else
     valuePointerDescriptor = reinterpret_cast<long>(&(driverProperties));
+#endif
     env->SetLongField(javaDriverProperties, fieldDescriptorPointer, valuePointerDescriptor);
 
     jfieldID field = env->GetFieldID(descriptionClass, "uuid", "[I");
@@ -201,7 +213,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     ze_result_t result = zeDriverGetApiVersion(driver, &version);
     LOG_ZE_JNI("zeDriverGetApiVersion", result);
 
+#ifdef _WIN32
+    valueAPIVersion = reinterpret_cast<int64_t>(&version);
+#else
     valueAPIVersion = reinterpret_cast<long>(&version);
+#endif
     env->SetIntField(javaAPIVersion, fieldAPIVersionPtr, valueAPIVersion);
 
     std::stringstream ss;

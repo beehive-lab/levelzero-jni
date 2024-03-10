@@ -76,7 +76,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     int type = env->GetIntField(javaKernelDesc, fieldType);
 
     jfieldID fieldFlags = env->GetFieldID(javaKernelDescClass, "flags", "J");
+#ifdef _WIN32
+    int64_t flags = env->GetLongField(javaKernelDesc, fieldFlags);
+#else
     long flags = env->GetLongField(javaKernelDesc, fieldFlags);
+#endif
 
     jfieldID fieldName = env->GetFieldID(javaKernelDescClass, "kernelName",  "Ljava/lang/String;");
     jstring javaStringName = static_cast<jstring>(env->GetObjectField(javaKernelDesc, fieldName));
