@@ -1,3 +1,8 @@
+## Beehive LevelZero-JNI 0.1.3
+14/03/2024
+
+- Add Windwos installer support
+
 ## Beehive LevelZero-JNI 0.1.2
 12/12/23
 
