@@ -40,14 +40,12 @@ md build
 cd build
 cmake ..
 cmake --build . --config Release
-```
 
-Note: Check for extisting Level Zero API libraries (e.g. `ze_tracing_layer.dll`) in `c:\windows\system32` if `zello_world.exe` fails.
-
-```
 rem check
 .\bin\Release\zello_world.exe
 ```
+
+Note: If `zello_world.exe` fails, search for existing Level Zero API DLLs (file names start with `ze_`, e.g. `ze_tracing_layer.dll`) in `c:\windows\system32` and move them to another folder.
 
 ### 2) Compile Level Zero JNI native code
 
@@ -70,13 +68,17 @@ make
 
 #### Windows
 
-Note: Run commands in _x64 Native Tools Command Prompt for VS 2022_
+Note: Run commands in _x64 Native Tools Command Prompt for VS 2022_.
 
 ```cmd
 git clone https://github.com/otabuzzman/levelzero-jni
 set ZE_SHARED_LOADER=%USERPROFILE%\lab\level-zero\build\lib\release\ze_loader.lib
 set CPLUS_INCLUDE_PATH=%USERPROFILE%\lab\level-zero\include
 set C_INCLUDE_PATH=%USERPROFILE%\lab\level-zero\include
+
+rem add the folder with Intel's Level Zero API DLLs to PATH
+set PATH=%USERPROFILE%\lab\level-zero\build\bin\release;%PATH%
+
 cd levelzero-jni\levelZeroLib
 md build
 cd build
@@ -115,8 +117,13 @@ llvm-spirv copyData.bc -o copyData.spv
 
 #### Windows
 
+Note: Java programs that use levelzero-jni are based on DLLs, which are provided by Intel's Level Zero API. For these programs to find these DLLs, the PATH environment variable must contain the folder that contains the DLLs.
+
 ```cmd
 mvn clean package
+
+rem add the folder with Intel's Level Zero API DLLs to PATH
+set PATH=%USERPROFILE%\lab\level-zero\build\bin\release;%PATH%
 
 rem copyData.spv file expected in CWD
 .\scripts\run.cmd
