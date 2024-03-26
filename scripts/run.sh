@@ -1,5 +1,6 @@
-clang -cc1 -triple spir copy_data.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
-llvm-spirv opencl-copy.bc -o opencl-copy.spv
-mv opencl-copy.spv /tmp/opencl-copy.spv
+#!/bin/bash
 
-java -Djava.library.path=./levelZeroLib/build -cp target/beehive-levelzero-jni-0.1.2.jar uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
+clang -cc1 -triple spir copyData.cl -O0 -finclude-default-header -emit-llvm-bc -o copyData.bc
+llvm-spirv copyData.bc -o copyData.spv
+
+java -Djava.library.path=./levelZeroLib/build -cp target/beehive-levelzero-jni-0.1.2.jar uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero copyData.spv

@@ -71,9 +71,9 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
  * Kernel to test:
  *
  * <code>
- *    __kernel void copydata(__global int* input, __global int* output) {
- * 	         uint idx = get_global_id(0);
- * 	         output[idx] = input[idx];
+ *     __kernel void copyData(__global int* input, __global int* output) {
+ *          uint idx = get_global_id(0);
+ *          output[idx] = input[idx];
  *    }
  * </code>
  *
@@ -81,17 +81,16 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
  * To compile to SPIR-V:
  *
  * <code>
- *     $ clang -cc1 -triple spir opencl-copy.cl -O0 -finclude-default-header -emit-llvm-bc -o opencl-copy.bc
- *     $ llvm-spirv opencl-copy.bc -o opencl-copy.spv
- *     $ mv opencl-copy.spv /tmp
+ *     $ clang -cc1 -triple spir copyData.cl -O0 -finclude-default-header -emit-llvm-bc -o copyData.bc
+ *     $ llvm-spirv copyData.bc -o copyData.spv
  * </code>
+ *
  *
  * How to run?
  *
  * <code>
- *     tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestLevelZero
+ *     tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestFences copyData.spv
  * </code>
- *
  */
 public class TestFences {
 
@@ -227,7 +226,7 @@ public class TestFences {
         moduleDesc.setFormat(ZeModuleFormat.ZE_MODULE_FORMAT_IL_SPIRV);
         moduleDesc.setBuildFlags("");
 
-        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "/tmp/opencl-copy.spv");
+        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, args[0]);
         LevelZeroUtils.errorLog("zeModuleCreate", result);
 
         if (result != ZeResult.ZE_RESULT_SUCCESS) {
@@ -248,7 +247,7 @@ public class TestFences {
 
         ZeKernelDescriptor kernelDesc = new ZeKernelDescriptor();
         ZeKernelHandle kernel = new ZeKernelHandle();
-        kernelDesc.setKernelName("copydata");
+        kernelDesc.setKernelName("copyData");
         result = levelZeroModule.zeKernelCreate(module.getPtrZeModuleHandle(), kernelDesc, kernel);
         LevelZeroUtils.errorLog("zeKernelCreate", result);
 

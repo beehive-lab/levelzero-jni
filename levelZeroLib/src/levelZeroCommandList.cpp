@@ -58,7 +58,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     if (javaSignalEvent != nullptr) {
         jclass signalEventClass = env->GetObjectClass(javaSignalEvent);
         jfieldID fieldSignal = env->GetFieldID(signalEventClass, "ptrZeEventHandle", "J");
+#ifdef _WIN32
+        int64_t eventSignalPtr = env->GetLongField(javaSignalEvent, fieldSignal);
+#else
         long eventSignalPtr = env->GetLongField(javaSignalEvent, fieldSignal);
+#endif
         signalEvent = reinterpret_cast<ze_event_handle_t>(eventSignalPtr);
     }
 
@@ -470,7 +474,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     if (javaEventHandler != nullptr) {
         jclass signalEventClass = env->GetObjectClass(javaEventHandler);
         jfieldID fieldSignal = env->GetFieldID(signalEventClass, "ptrZeEventHandle", "J");
+#ifdef _WIN32
+        int64_t eventSignalPtr = env->GetLongField(javaEventHandler, fieldSignal);
+#else
         long eventSignalPtr = env->GetLongField(javaEventHandler, fieldSignal);
+#endif
         events = reinterpret_cast<ze_event_handle_t>(eventSignalPtr);
     }
 
@@ -515,6 +523,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     }
 
     ze_result_t result = zeCommandListAppendWriteGlobalTimestamp(commandList, (uint64_t *) timestampBuffer ,nullptr, numWaitEvents, nullptr);
+
     LOG_ZE_JNI("zeCommandListAppendWriteGlobalTimestamp", result);
     return result;
 }
@@ -531,8 +540,13 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     jclass classLevelZeroIntegerBuffer = env->GetObjectClass(levelZeroBufferInteger);
     jfieldID fieldBufferPtr = env->GetFieldID(classLevelZeroIntegerBuffer, "ptrBuffer", "J");
+#ifdef _WIN32
+    int64_t bufferPtr = env->GetLongField(levelZeroBufferInteger, fieldBufferPtr);
+    const int64_t *ptr = reinterpret_cast<const int64_t *>(bufferPtr);
+#else
     long bufferPtr = env->GetLongField(levelZeroBufferInteger, fieldBufferPtr);
     const void *ptr = reinterpret_cast<const void *>(bufferPtr);
+#endif
 
     ze_result_t result = zeCommandListAppendMemoryPrefetch(commandList, ptr, size);
     LOG_ZE_JNI("zeCommandListAppendMemoryPrefetch", result);
@@ -555,8 +569,13 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     jclass classLevelZeroIntegerBuffer = env->GetObjectClass(levelZeroBufferInteger);
     jfieldID fieldBufferPtr = env->GetFieldID(classLevelZeroIntegerBuffer, "ptrBuffer", "J");
+#ifdef _WIN32
+    int64_t bufferPtr = env->GetLongField(levelZeroBufferInteger, fieldBufferPtr);
+    const int64_t *ptr = reinterpret_cast<const int64_t *>(bufferPtr);
+#else
     long bufferPtr = env->GetLongField(levelZeroBufferInteger, fieldBufferPtr);
     const void *ptr = reinterpret_cast<const void *>(bufferPtr);
+#endif
 
     ze_result_t result = zeCommandListAppendMemAdvise(commandList, deviceHandle, ptr, size, memoryAdvice);
     LOG_ZE_JNI("zeCommandListAppendMemAdvise", result);

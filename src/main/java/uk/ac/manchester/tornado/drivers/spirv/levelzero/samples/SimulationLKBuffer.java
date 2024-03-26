@@ -46,39 +46,40 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeKernelHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 /**
+ * Kernels to test:
+ *
+ * <code>
+ *     __kernel void lookUp(__global uchar *heap) {
+ *          __global ulong *_frame = (__global ulong *) &heap[0];
+ *          *((__global long *) &heap[get_global_id(0)])  =  (ulong) _frame;
+ *     }
+ * </code>
+ *
+ * <code>
+ *     __kernel void copyTest(__global uchar *_heap_base)
+ *     {
+ *          int i_8, i_7, i_1, i_2;
+ *          ulong ul_0, ul_6;
+ *          long l_3, l_5, l_4;
+ *
+ *          __global ulong *_frame = (__global ulong *) &_heap_base[0];
+ *
+ *          ul_0  =  (ulong) _frame[3];
+ *          i_1  =  get_global_id(0);
+ *          i_2  =  i_1;
+ *          l_3  =  (long) i_2;
+ *          l_4  =  l_3 << 3;  // Long buffer
+ *          l_5  =  l_4 + 16L; // Randomly starting in position 16
+ *          ul_6  =  ul_0 + l_5;
+ *          *((__global int *) ul_6)  =  555;
+ *     }
+ * </code>
+ *
+ *
  * How to run?
  *
  * <code>
- * __kernel void lookUp(__global uchar *heap) {
- *        __global ulong *_frame = (__global ulong *) &heap[0];
- *       *((__global long *) &heap[get_global_id(0)])  =  (ulong) _frame;
- * }
- *
- * </code>
- *
- * <code>
- *  __kernel void copyTest(__global uchar *_heap_base)
- * {
- *   int i_8, i_7, i_1, i_2;
- *   ulong ul_0, ul_6;
- *   long l_3, l_5, l_4;
- *
- *   __global ulong *_frame = (__global ulong *) &_heap_base[0];
- *
- *   ul_0  =  (ulong) _frame[3];
- *   i_1  =  get_global_id(0);
- *   i_2  =  i_1;
- *   l_3  =  (long) i_2;
- *   l_4  =  l_3 << 3;         // Long buffer
- *   l_5  =  l_4 + 16L;        // Randomly starting in position 16
- *   ul_6  =  ul_0 + l_5;
- *   *((__global int *) ul_6)  =  555;
- * }
- * </code>
- *
- *
- * <code>
- *     $ tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.SimulationLKBuffer
+ *     $ tornado uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.SimulationLKBuffer lookUpBufferAddress.spv copyTest.spv
  * </code>
  */
 public class SimulationLKBuffer {
@@ -87,6 +88,7 @@ public class SimulationLKBuffer {
     // private static final int DEVICE_HEAP_SIZE = 128 * 8;
     private static final int DEVICE_HEAP_SIZE = 1000000000; // 1GB
     private static long[] stack;
+    private static String[] args;
 
     private static void dispatchCopyKernel(LevelZeroCommandList commandList, LevelZeroCommandQueue commandQueue, LevelZeroKernel levelZeroKernel, long[] output, int bufferSize, ByteBuffer stack) {
         ZeKernelHandle kernel = levelZeroKernel.getKernelHandle();
@@ -155,7 +157,7 @@ public class SimulationLKBuffer {
         int result = context.zeMemAllocDevice(context.getDefaultContextPtr(), deviceMemAllocDesc, DEVICE_HEAP_SIZE, 1, device.getDeviceHandlerPtr(), deviceHeapBuffer);
         LevelZeroUtils.errorLog("zeMemAllocDevice", result);
 
-        LevelZeroKernel levelZeroKernel = LevelZeroUtils.compileSPIRVKernel(device, context, "lookUp", "/tmp/lookUpBufferAddress.spv");
+        LevelZeroKernel levelZeroKernel = LevelZeroUtils.compileSPIRVKernel(device, context, "lookUp", args[0]);
         LevelZeroUtils.dispatchLookUpBuffer(commandList, commandQueue, levelZeroKernel, deviceHeapBuffer, output, bufferSize);
 
         result = commandList.zeCommandListReset(commandList.getCommandListHandlerPtr());
@@ -175,7 +177,7 @@ public class SimulationLKBuffer {
         result = commandList.zeCommandListAppendBarrier(commandList.getCommandListHandlerPtr(), null, 0, null);
         LevelZeroUtils.errorLog("zeCommandListAppendBarrier", result);
 
-        LevelZeroKernel kernelCopy = LevelZeroUtils.compileSPIRVKernel(device, context, "copyTest", "/tmp/example.spv");
+        LevelZeroKernel kernelCopy = LevelZeroUtils.compileSPIRVKernel(device, context, "copyTest", args[1]);
         long[] output2 = new long[128];
         dispatchCopyKernel(commandList, commandQueue, kernelCopy, output2, 128 * Sizeof.LONG.getNumBytes(), stack);
 
@@ -199,6 +201,7 @@ public class SimulationLKBuffer {
      * @param args
      */
     public static void main(String[] args) {
+        SimulationLKBuffer.args = args;
         LevelZeroDriver driver = new LevelZeroDriver();
         LevelZeroContext context = LevelZeroUtils.zeInitContext(driver);
         LevelZeroDevice device = LevelZeroUtils.zeGetDevices(context, driver);

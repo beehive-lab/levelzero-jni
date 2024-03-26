@@ -1,4 +1,9 @@
-## Beehive LevelZero-JNI 0.1.2 
+## Beehive LevelZero-JNI 0.1.3
+14/03/2024
+
+- Add Windows installer support
+
+## Beehive LevelZero-JNI 0.1.2
 12/12/23
 
 - Multiple SPIR-V Devices Fixed: [commit](https://github.com/beehive-lab/levelzero-jni/commit/fe20b18c9623b4d0533ee50d878b266ecdce46dc)
@@ -20,8 +25,9 @@
 ## LevelZero-JNI 0.1.0
 03/12/2021
 
-- Initial prototype of LevelZero JNI.
+- Initial prototype of LevelZero JNI
 - It covers a subset of the Intel Level-Zero 1.1.2 Spec (Feb 2021)
 - C++ Wrapper for JNI provided
 - Java Interface provided
 - Set of examples and documentation
+
