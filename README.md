@@ -5,7 +5,7 @@ Baremetal GPU and FPGA programming for Java using Intel's [Level Zero API](https
 
 ## Compilation & configuration of the JNI Level Zero API
 
-### 1) Compile Level Zero API
+### 1) Compile Native Library: Level Zero API
 
 #### Linux
 
@@ -22,14 +22,15 @@ cmake --build . --config Release
 cmake --build . --config Release --target package
 ```
 
-#### Windows
+#### Windows 10/11
 
-Configuration:
+Tested Configurations:
 - Lenovo IdeaPad Gaming 3 15IHU6
+- Dell XPS 8950
 - Windows 11
 - VS Community 2022
-  + components C++, Git, Spectre mitigated libraries
-- CMake 3.26.3, Maven 3.9.1, JDK 21
+  + components: C++, Git, Spectre mitigated libraries
+- CMake 3.26.3, Maven 3.9.1, JDK 21+
 
 Run commands in _x64 Native Tools Command Prompt for VS 2022_.
 
@@ -47,7 +48,7 @@ rem check
 
 Note: If `zello_world.exe` fails, search for existing Level Zero API DLLs (file names start with `ze_`, e.g. `ze_tracing_layer.dll`) in `c:\windows\system32` and move them to another folder.
 
-### 2) Compile Level Zero JNI native code
+### 2) Compile Level Zero Java JNI native code
 
 Set the paths to the directory of Level Zero installation. Here are examples:
 
@@ -66,7 +67,7 @@ cmake ..
 make
 ```
 
-#### Windows
+#### Windows 10/11
 
 Note: Run commands in _x64 Native Tools Command Prompt for VS 2022_.
 
