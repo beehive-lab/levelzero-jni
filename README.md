@@ -69,7 +69,7 @@ make
 Note: Run commands in _x64 Native Tools Command Prompt for VS 2022_.
 
 ```cmd
-git clone https://github.com/otabuzzman/levelzero-jni
+git clone https://github.com/beehive-lab/levelzero-jni
 set ZE_SHARED_LOADER=%USERPROFILE%\lab\level-zero\build\lib\release\ze_loader.lib
 set CPLUS_INCLUDE_PATH=%USERPROFILE%\lab\level-zero\include
 set C_INCLUDE_PATH=%USERPROFILE%\lab\level-zero\include
