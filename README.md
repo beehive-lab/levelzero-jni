@@ -9,12 +9,9 @@ Baremetal GPU and FPGA programming for Java using Intel's [Level Zero API](https
 
 #### Linux
 
-Note: Using tag `v1.4.1` from `level-zero` which implements Level Zero Specification 1.2.
-
 ```bash
 git clone https://github.com/oneapi-src/level-zero.git
 cd level-zero
-git checkout tags/v1.4.1
 mkdir build
 cd build
 cmake ..

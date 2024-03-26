@@ -1,7 +1,8 @@
 ## Beehive LevelZero-JNI 0.1.3
-14/03/2024
+26/03/2024
 
-- Add Windows installer support
+- Add Windows 10/11 installer support using Window Microsoft Studio Tools: [commit](https://github.com/beehive-lab/levelzero-jni/commit/02b24de0e8fe86790bdc29e1cf50b2d199c8e999).
+
 
 ## Beehive LevelZero-JNI 0.1.2
 12/12/23
