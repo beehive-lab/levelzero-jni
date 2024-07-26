@@ -260,8 +260,5 @@ public class TestConstantParameters {
 
         result = driver.zeContextDestroy(context);
         LevelZeroUtils.errorLog("zeContextDestroy", result);
-
-
-
     }
 }
