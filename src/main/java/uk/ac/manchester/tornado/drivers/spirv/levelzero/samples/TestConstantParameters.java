@@ -59,11 +59,18 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeModuleHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeResult;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
-public class TestParameters {
-
+/**
+ * How to run?
+ * <code>
+ *   clang -cc1 -triple spir constantsParameters.cl -O0 -finclude-default-header -emit-llvm-bc -o constantsParameters.bc
+ *   llvm-spirv constantsParameters.bc -o constantsParameters.spv
+ *   java -Djava.library.path=./levelZeroLib/build -cp target/beehive-levelzero-jni-0.1.3.jar uk.ac.manchester.tornado.drivers.spirv.levelzero.samples.TestConstantParameters
+ * </code>
+ */
+public class TestConstantParameters {
 
     public static void main(String[] args) {
-        System.out.println("Testing Level-ZERO JNI Library");
+        System.out.println("Testing Level Zero zeKernelSetArgumentValue with constants");
 
         // Create the Level Zero Driver
         LevelZeroDriver driver = new LevelZeroDriver();
@@ -166,7 +173,7 @@ public class TestParameters {
         moduleDesc.setFormat(ZeModuleFormat.ZE_MODULE_FORMAT_IL_SPIRV);
         moduleDesc.setBuildFlags("");
 
-        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "copyParameters.spv");
+        result = context.zeModuleCreate(context.getDefaultContextPtr(), device.getDeviceHandlerPtr(), moduleDesc, module, buildLog, "constantsParameters.spv");
         LevelZeroUtils.errorLog("zeModuleCreate", result);
 
         if (result != ZeResult.ZE_RESULT_SUCCESS) {
