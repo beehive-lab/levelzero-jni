@@ -2,12 +2,14 @@
 
 Baremetal GPU and FPGA programming for Java using Intel's [Level Zero API](https://spec.oneapi.io/level-zero/latest/index.html). This project is a Java Native Interface (JNI) binding for Intel's Level Zero. This library is designed to be as closed as possible to the Level Zero API for C++. Subset of Level Zero 1.4.0 supported (Level Zero May 2022 version)
 
+This project contains the logic needed to dispatch TornadoVM applications on Intel ARC and Intel integrated GPUs. 
+It is, by no means, a complete port of the Level Zero API, but external contributions are welcome.
 
 ## Compilation & configuration of the JNI Level Zero API
 
 ### 1) Compile Native Library: Level Zero API
 
-#### Linux
+#### Linux (Tested for Fedora 35-40 and Ubuntu 22.X-24.X)
 
 ```bash
 git clone https://github.com/oneapi-src/level-zero.git
@@ -84,7 +86,7 @@ cmake ..
 cmake --build . --config Release
 ```
 
-#### Obtain a SPIR-V compiler (Linux and Windwos)
+#### Obtain a SPIR-V compiler (Linux and Windows)
 
 In case you want to compile kernels from OpenCL C to SPIR-V and use the Level Zero API, you need to download the `llvm-spirv` compiler. The implementation we are currently using is [Intel LLVM](https://github.com/intel/llvm).
 
