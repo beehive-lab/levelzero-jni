@@ -59,8 +59,8 @@ else()
 endif()
 
 # This should point to:
-#  Linos: "PATH-TO/level-zero/build/lib/libze_loader.so"
-#  Winos: "PATH-TO\level-zero\build\lib\release\ze_loader.lib"
+#  Linux  : "PATH-TO/level-zero/build/lib/libze_loader.so"
+#  Windows: "PATH-TO\level-zero\build\lib\release\ze_loader.lib"
 set(ZE_LOADER $ENV{ZE_SHARED_LOADER})
 
 include_directories(
@@ -84,6 +84,7 @@ add_library(tornado-levelzero SHARED
 	src/levelZeroFence.cpp
 	src/levelZeroTimeStampKernel.cpp
 	src/levelZeroDescriptors.cpp
+    src/levelZeroPointer.cpp
 	)
 
 target_link_libraries(tornado-levelzero ${OpenCL_LIBRARIES} ${JNI_LIB_DIRS})
