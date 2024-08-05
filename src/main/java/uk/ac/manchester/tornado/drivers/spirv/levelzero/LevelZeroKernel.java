@@ -82,7 +82,7 @@ public class LevelZeroKernel {
         return zeKernelSetArgumentValue_nativePtrArg(ptrZeKernelHandle, argIndex, argSize, ptrBuffer);
     }
 
-    public int zeKernelSetArgumentValuePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, Pointer pointerTo) {
+    public int zeKernelSetArgumentValuePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, Pointer<?> pointerTo) {
         if (pointerTo == null) {
             throw new IllegalArgumentException("Pointer to argument is null");
         }
