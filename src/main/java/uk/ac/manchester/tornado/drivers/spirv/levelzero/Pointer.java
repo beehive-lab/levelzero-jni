@@ -24,21 +24,47 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-public class Pointer {
+public class Pointer<T> {
 
-    public native static long to(byte value);
+    private final T value;
 
-    public native static long to(long value);
+    private Pointer(T value) {
+        this.value = value;
+    }
 
-    public native static long to(short value);
+    public T getValue() {
+        return this.value;
+    }
 
-    public native static long to(int value);
+    public static Pointer<Integer> to(int value) {
+        return new Pointer<>(value);
+    }
 
-    public native static long to(float value);
+    public static Pointer<Long> to(long value) {
+        return new Pointer<>(value);
+    }
 
-    public native static long to(double value);
+    public static Pointer<Short> to(short value) {
+        return new Pointer<>(value);
+    }
 
-    public native static long to(char value);
+    public static Pointer<Byte> to(byte value) {
+        return new Pointer<>(value);
+    }
 
-    public native static long to(boolean value);
+    public static Pointer<Character> to(char value) {
+        return new Pointer<>(value);
+    }
+
+    public static Pointer<Float> to(float value) {
+        return new Pointer<>(value);
+    }
+
+    public static Pointer<Double> to(double value) {
+        return new Pointer<>(value);
+    }
+
+    public static Pointer<Boolean> to(boolean value) {
+        return new Pointer<>(value);
+    }
 }

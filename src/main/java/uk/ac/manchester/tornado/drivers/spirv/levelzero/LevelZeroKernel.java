@@ -24,6 +24,8 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
+import java.io.InputStream;
+
 public class LevelZeroKernel {
 
     private ZeKernelDescriptor kernelDesc;
@@ -55,12 +57,54 @@ public class LevelZeroKernel {
 
     private native int zeKernelSetArgumentValue_nativePtrArg(long ptrZeKernelHandle, int argIndex, int argSize, long ptrBuffer);
 
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, int value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, long value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, short value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, byte value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, char value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, boolean value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, float value);
+
+    private native int zeKernelSetArgumentValue_nativePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, double value);
+
+
     public int zeKernelSetArgumentValue(long ptrZeKernelHandle, int argIndex, int argSize, LevelZeroBufferInteger argValue) {
         return zeKernelSetArgumentValue_nativePtrArg(ptrZeKernelHandle, argIndex, argSize, (argValue == null) ? -1 : argValue.getPtrBuffer());
     }
 
     public int zeKernelSetArgumentValue(long ptrZeKernelHandle, int argIndex, int argSize, long ptrBuffer) {
         return zeKernelSetArgumentValue_nativePtrArg(ptrZeKernelHandle, argIndex, argSize, ptrBuffer);
+    }
+
+    public int zeKernelSetArgumentValuePrimitive(long ptrZeKernelHandle, int argIndex, int argSize, Pointer pointerTo) {
+        if (pointerTo == null) {
+            throw new IllegalArgumentException("Pointer to argument is null");
+        }
+        Object val = pointerTo.getValue();
+        if (val instanceof Integer) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Integer) val);
+        } else if (val instanceof Long) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Long) val);
+        } else if (val instanceof Short) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Short) val);
+        } else if (val instanceof Character) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Character) val);
+        } else if (val instanceof Boolean) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Boolean) val);
+        } else if (val instanceof Float) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Float) val);
+        } else if (val instanceof Double) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Double) val);
+        } else if (val instanceof Byte) {
+            return zeKernelSetArgumentValue_nativePrimitive(ptrZeKernelHandle, argIndex, argSize, (Byte) val);
+        }
+        return -1;
     }
 
     private native int zeKernelSetCacheConfig_native(long ptrZeKernelHandle, int zeCacheConfigFlagLargeSlm);

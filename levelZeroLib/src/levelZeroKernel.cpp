@@ -86,6 +86,110 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIII)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIII
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jint value) {
+    ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+    ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+    LOG_ZE_JNI("zeKernelSetArgumentValue [int]", result);
+    return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIJ)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIJ
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jlong value) {
+   ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+   ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+   LOG_ZE_JNI("zeKernelSetArgumentValue [long]", result);
+   return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIS)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIS
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jshort value) {
+  ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+  ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+  LOG_ZE_JNI("zeKernelSetArgumentValue [short]", result);
+  return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIB)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIB
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jbyte value) {
+  ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+  ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+  LOG_ZE_JNI("zeKernelSetArgumentValue [byte]", result);
+  return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIC)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIC
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jchar value) {
+   ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+   ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+   LOG_ZE_JNI("zeKernelSetArgumentValue [char]", result);
+   return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIZ)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIZ
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jboolean value) {
+   ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+   ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+   LOG_ZE_JNI("zeKernelSetArgumentValue [boolean]", result);
+   return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIF)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIF
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jfloat value) {
+   ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+   ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+   LOG_ZE_JNI("zeKernelSetArgumentValue [float]", result);
+   return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIID)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIID
+(JNIEnv *env, jobject object, jlong javaKernelHandlerPtr, jint argIndex, jint argSize, jdouble value) {
+   ze_kernel_handle_t kernel = reinterpret_cast<ze_kernel_handle_t>(javaKernelHandlerPtr);
+   ze_result_t result = zeKernelSetArgumentValue(kernel, argIndex, argSize, &value);
+   LOG_ZE_JNI("zeKernelSetArgumentValue [double]", result);
+   return result;
+}
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
  * Method:    zeKernelSetCacheConfig_native
  * Signature: (JI)I
  */

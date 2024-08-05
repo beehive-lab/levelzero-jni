@@ -162,10 +162,10 @@ public class TestConstantParameters {
         hostMemAllocDesc.setFlags(ZeHostMemAllocFlags.ZE_HOST_MEM_ALLOC_FLAG_BIAS_UNCACHED);
 
         LevelZeroBufferInteger bufferA = new LevelZeroBufferInteger();
-        result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, bufferSize, 1, device.getDeviceHandlerPtr(), bufferA);
+        result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, bufferSize, 128, device.getDeviceHandlerPtr(), bufferA);
         LevelZeroUtils.errorLog("zeMemAllocShared", result);
 
-        bufferA.memset(100, elements);
+        bufferA.memset(1, elements);
 
         ZeModuleHandle module = new ZeModuleHandle();
         ZeModuleDescriptor moduleDesc = new ZeModuleDescriptor();
@@ -203,7 +203,7 @@ public class TestConstantParameters {
 
         // Prepare kernel for launch
         // A) Suggest scheduling parameters to level-zero
-        int[] groupSizeX = new int[]{32};
+        int[] groupSizeX = new int[]{elements};
         int[] groupSizeY = new int[]{1};
         int[] groupSizeZ = new int[]{1};
         result = levelZeroKernel.zeKernelSuggestGroupSize(kernel.getPtrZeKernelHandle(), elements, 1, 1, groupSizeX, groupSizeY, groupSizeZ);
@@ -213,8 +213,8 @@ public class TestConstantParameters {
         LevelZeroUtils.errorLog("zeKernelSetGroupSize", result);
 
         int value = 2;
-        result = levelZeroKernel.zeKernelSetArgumentValue(kernel.getPtrZeKernelHandle(), 0, Sizeof.POINTER.getNumBytes(), bufferA);
-        result |= levelZeroKernel.zeKernelSetArgumentValue(kernel.getPtrZeKernelHandle(), 1, Sizeof.INT.getNumBytes(), Pointer.to(value));
+        result = levelZeroKernel.zeKernelSetArgumentValue(kernel.getPtrZeKernelHandle(), 0, Sizeof.POINTER.getNumBytes(), bufferA.getPtrBuffer());
+        result |= levelZeroKernel.zeKernelSetArgumentValuePrimitive(kernel.getPtrZeKernelHandle(), 1, Sizeof.INT.getNumBytes(), Pointer.to(value));
         LevelZeroUtils.errorLog("zeKernelSetArgumentValue", result);
 
         // Dispatch SPIR-V Kernel

@@ -57,6 +57,70 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIII)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIII
+ (JNIEnv *, jobject, jlong, jint, jint, jint);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIJ)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIJ
+  (JNIEnv *, jobject, jlong, jint, jint, jlong);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIS)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIS
+  (JNIEnv *, jobject, jlong, jint, jint, jshort);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIB)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIB
+  (JNIEnv *, jobject, jlong, jint, jint, jbyte);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIC)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIC
+  (JNIEnv *, jobject, jlong, jint, jint, jchar);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIZ)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIZ
+  (JNIEnv *, jobject, jlong, jint, jint, jboolean);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIIF)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIIF
+  (JNIEnv *, jobject, jlong, jint, jint, jfloat);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
+ * Method:    zeKernelSetArgumentValue_nativePrimitive
+ * Signature: (JIID)I
+ */
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel_zeKernelSetArgumentValue_1nativePrimitive__JIID
+  (JNIEnv *, jobject, jlong, jint, jint, jdouble);
+
+/*
+ * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroKernel
  * Method:    zeKernelSetCacheConfig_native
  * Signature: (JI)I
  */
