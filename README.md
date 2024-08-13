@@ -1,15 +1,13 @@
 # Beehive LevelZero JNI
 
-Baremetal GPU and FPGA programming for Java using Intel's [Level Zero API](https://spec.oneapi.io/level-zero/latest/index.html). This project is a Java Native Interface (JNI) binding for Intel's Level Zero. This library is designed to be as closed as possible to the Level Zero API for C++. Subset of Level Zero 1.4.0 supported (Level Zero May 2022 version)
-
-This project contains the logic needed to dispatch TornadoVM applications on Intel ARC and Intel integrated GPUs. 
-It is, by no means, a complete port of the Level Zero API, but external contributions are welcome.
+Baremetal GPU and FPGA programming for Java using Intel's [Level Zero API](https://spec.oneapi.io/level-zero/latest/index.html). This project is a Java Native Interface (JNI) binding for Intel's Level Zero. This library is designed to be as closed as possible to the Level Zero API for C++ API, and it supports a subset of the Level Zero 1.4.0 API (Level Zero as in May 2022).
+This library is used by [TornadoVM](https://github.com/beehive-lab/TornadoVM/), and the subset of the Level Zero API 1.4.0 is the minimum required to dispatch SPIR-V kernels on Intel ARC and Intel integrated GPUs under the TornadoVM Runtime. It is, by no means, a complete port of the Level Zero API, but external contributions are very welcome.
 
 ## Compilation & configuration of the JNI Level Zero API
 
 ### 1) Compile Native Library: Level Zero API
 
-#### Linux (Tested for Fedora 35-40 and Ubuntu 22.X-24.X)
+#### Linux (Tested for Fedora 35-39 and Ubuntu 22.X-24.X)
 
 ```bash
 git clone https://github.com/oneapi-src/level-zero.git
@@ -54,7 +52,7 @@ Set the paths to the directory of Level Zero installation. Here are examples:
 #### Linux
 
 ```bash
-scl enable devtoolset-9 bash # << Only for CentOS
+scl enable devtoolset-9 bash # << Only for CentOS/RHEL
 git clone https://github.com/beehive-lab/levelzero-jni
 export ZE_SHARED_LOADER="<path-to-levelzero>/build/lib/libze_loader.so"
 export CPLUS_INCLUDE_PATH=<path-to-levelzero>/include:$CPLUS_INCLUDE_PATH
@@ -90,7 +88,7 @@ cmake --build . --config Release
 
 In case you want to compile kernels from OpenCL C to SPIR-V and use the Level Zero API, you need to download the `llvm-spirv` compiler. The implementation we are currently using is [Intel LLVM](https://github.com/intel/llvm).
 
-### 3) Compile and run a Java test
+### 3) Compile the Java Library and Run Tests
 
 #### Linux
 
@@ -117,7 +115,7 @@ llvm-spirv copyData.bc -o copyData.spv
 
 #### Windows
 
-Note: Java programs that use levelzero-jni are based on DLLs, which are provided by Intel's Level Zero API. For these programs to find these DLLs, the PATH environment variable must contain the folder that contains the DLLs.
+Note: Java programs that use `levelzero-jni` are based on DLLs, which are provided by Intel's Level Zero API. For these programs to find these DLLs, the PATH environment variable must contain the folder that contains the DLLs.
 
 ```cmd
 mvn clean package
@@ -136,6 +134,55 @@ rem copyData.spv file expected in CWD
 .\scripts\transferTimers.cmd
 .\scripts\largeBuffers.cmd
 ```
+
+## Some Examples
+
+
+### Instance Driver Pointer 
+
+
+```java
+ // Obtain the Level Zero Driver
+LevelZeroDriver driver = new LevelZeroDriver();
+int result = driver.zeInit(ZeInitFlag.ZE_INIT_FLAG_GPU_ONLY);
+LevelZeroUtils.errorLog("zeInit", result);
+
+int[] numDrivers = new int[1];
+result = driver.zeDriverGet(numDrivers, null);
+LevelZeroUtils.errorLog("zeDriverGet", result);
+
+ZeDriverHandle driverHandler = new ZeDriverHandle(numDrivers[0]);
+result = driver.zeDriverGet(numDrivers, driverHandler);
+LevelZeroUtils.errorLog("zeDriverGet", result);
+```
+
+### Create Level Zero Context
+
+```java
+ZeContextDescriptor contextDescription = new ZeContextDescriptor();
+LevelZeroContext context = new LevelZeroContext(driverHandler, contextDescription);
+result = context.zeContextCreate(driverHandler.getZe_driver_handle_t_ptr()[0]);
+LevelZeroUtils.errorLog("zeContextCreate", result);
+```
+
+
+### Allocate Shared Memory:
+
+```java
+ZeDeviceMemAllocDescriptor deviceMemAllocDesc = new ZeDeviceMemAllocDescriptor();
+deviceMemAllocDesc.setFlags(ZeDeviceMemAllocFlags.ZE_DEVICE_MEM_ALLOC_FLAG_BIAS_UNCACHED);
+
+
+ZeHostMemAllocDescriptor hostMemAllocDesc = new ZeHostMemAllocDescriptor();
+hostMemAllocDesc.setFlags(ZeHostMemAllocFlags.ZE_HOST_MEM_ALLOC_FLAG_BIAS_UNCACHED);
+
+
+LevelZeroBufferInteger bufferA = new LevelZeroBufferInteger();
+result = context.zeMemAllocShared(context.getContextHandle().getContextPtr()[0], deviceMemAllocDesc, hostMemAllocDesc, bufferSize, 1, device.getDeviceHandlerPtr(), bufferA);
+LevelZeroUtils.errorLog("zeMemAllocShared", result);
+```
+
+See the full list of examples [here](https://github.com/beehive-lab/levelzero-jni/tree/master/src/main/java/uk/ac/manchester/tornado/drivers/spirv/levelzero/samples).
 
 
 ## License
