@@ -1,3 +1,12 @@
+## Beehive LevelZero-JNI 0.1.4
+13/08/2024
+
+- Add Method to set constant parameters: [commit](https://github.com/beehive-lab/levelzero-jni/commit/3c62cadfe183f6b147b9d84140e55b70eb80222d).
+- Utility script added for compiling OpenCL C kernels to SPIR-V using CLANG/LLVM: [commit](https://github.com/beehive-lab/levelzero-jni/commit/4797d51a98cf913cfec11f9675bb0cd80069961c).
+- Low-level code to handle pointers to primitives removed: [commit](https://github.com/beehive-lab/levelzero-jni/commit/bf98f78ff90db7579225ea2e5119dd55758e761a).
+- Documentation updated: [commit](https://github.com/beehive-lab/levelzero-jni/commit/8c0d0e63243bae311fe4c901d5791f8413824a10).
+
+
 ## Beehive LevelZero-JNI 0.1.3
 26/03/2024
 
