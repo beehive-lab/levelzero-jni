@@ -114,7 +114,7 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
  * Signature: ([J)I
  */
 JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_checkPowerQueryPossible
-  (JNIEnv *, jobject, jlongArray){
+  (JNIEnv* env, jobject obj, jlongArray jSysmanDevices){
 
     jsize length = env->GetArrayLength(jSysmanDevices);
     std::vector<zes_device_handle_t> allSysmanDevices(length);
