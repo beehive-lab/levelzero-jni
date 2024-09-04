@@ -29,7 +29,7 @@
 
 
 #include "ze_api.h"
-#include "ze_log.h"
+#include "zes_api.h"
 
 #define VALIDATECALL(myZeCall) \
     if (myZeCall != ZE_RESULT_SUCCESS){ \
