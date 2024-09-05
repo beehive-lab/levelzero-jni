@@ -137,8 +137,6 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
         }
     }
    
-    std::cout << "Number of dGPU devices: " << sysmanDevicesToQuery.size() << std::endl;
-
     if (sysmanDevicesToQuery.empty()) {
         return -2; // All iGPUs - Cannot calculate power consumption
     }
