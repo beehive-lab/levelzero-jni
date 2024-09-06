@@ -9,7 +9,7 @@ public class LevelZeroPowerMonitor {
         System.loadLibrary("tornado-levelzero");
     }
 
-    public native long[] ZesInit();
+    public native long[] ZesInit(long[] deviceHandles);
     public native int checkPowerQueryPossible(long[] allSysmanDevices);
     public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
 

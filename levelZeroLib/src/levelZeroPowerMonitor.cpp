@@ -55,58 +55,35 @@ bool IsIntegratedGPU(zes_device_handle_t hSysmanDevice) {
  * Method:    ZesInit
  * Signature: ()[J
  */
+
 JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_ZesInit
-  (JNIEnv* env, jobject obj){
-
-    VALIDATECALL(zeInit(ZE_INIT_FLAG_GPU_ONLY));
-
+  (JNIEnv* env, jobject obj, jlongArray jDeviceHandles) {
     
-    uint32_t driverCount = 0;
-    VALIDATECALL(zeDriverGet(&driverCount, nullptr));
-
-    std::vector<ze_driver_handle_t> driverHandles(driverCount);
-    VALIDATECALL(zeDriverGet(&driverCount, driverHandles.data()));
-
-    // Use the first driver handle 
-    ze_driver_handle_t driverHandle = driverHandles[0];
-
-    ze_driver_properties_t driverProperties = {};
-    driverProperties.stype = ZE_STRUCTURE_TYPE_DRIVER_PROPERTIES;
-    VALIDATECALL(zeDriverGetProperties(driverHandle, &driverProperties));
-
-    ze_context_desc_t contextDescription = {};
-    contextDescription.stype = ZE_STRUCTURE_TYPE_CONTEXT_DESC;
-    ze_context_handle_t context;
-    VALIDATECALL(zeContextCreate(driverHandle, &contextDescription, &context));
-
-    uint32_t deviceCount = 0;
-    VALIDATECALL(zeDeviceGet(driverHandle, &deviceCount, nullptr));
-
-
-    std::vector<ze_device_handle_t> deviceHandles(deviceCount);
-    VALIDATECALL(zeDeviceGet(driverHandle, &deviceCount, deviceHandles.data()));
+    jsize length = env->GetArrayLength(jDeviceHandles);
+    jlong* deviceElements = env->GetLongArrayElements(jDeviceHandles, nullptr);
 
     std::vector<zes_device_handle_t> sysmanHandles;
 
-    for (ze_device_handle_t device : deviceHandles) {
-
-        zes_device_handle_t sysmanHandle = reinterpret_cast<zes_device_handle_t>(device);
+    for (jsize i = 0; i < length; ++i) {
+        ze_device_handle_t deviceHandle = reinterpret_cast<ze_device_handle_t>(deviceElements[i]);
+        zes_device_handle_t sysmanHandle = reinterpret_cast<zes_device_handle_t>(deviceHandle);
         sysmanHandles.push_back(sysmanHandle);
-
     }
 
-    // Convert the sysmanHandles vector to a jlongArray to return to Java
+    env->ReleaseLongArrayElements(jDeviceHandles, deviceElements, 0);
+
     jlongArray result = env->NewLongArray(sysmanHandles.size());
-    jlong* elements = env->GetLongArrayElements(result, nullptr);
+    jlong* sysmanElements = env->GetLongArrayElements(result, nullptr);
 
     for (size_t i = 0; i < sysmanHandles.size(); ++i) {
-        elements[i] = reinterpret_cast<jlong>(sysmanHandles[i]);
+        sysmanElements[i] = reinterpret_cast<jlong>(sysmanHandles[i]);
     }
 
-    env->ReleaseLongArrayElements(result, elements, 0);
-    return result;
+    env->ReleaseLongArrayElements(result, sysmanElements, 0);
 
+    return result;
 }
+
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor

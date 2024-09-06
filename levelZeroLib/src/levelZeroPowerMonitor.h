@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    ZesInit
- * Signature: ()[J
+ * Signature: ([J)[J
  */
 JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_ZesInit
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlongArray);
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
