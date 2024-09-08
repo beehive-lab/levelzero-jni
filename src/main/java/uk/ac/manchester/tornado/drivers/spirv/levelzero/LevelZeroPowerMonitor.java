@@ -34,8 +34,6 @@ public class LevelZeroPowerMonitor {
 
     public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
 
-    public native double calculatePowerUsage(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters);
-
     private native int zesDeviceEnumPowerDomains_native(long deviceHandler, int[] numPowerDomains, long[] hMemory);
 
     public int zesDeviceEnumPowerDomains(long deviceHandler, int[] numPowerDomains, long[] hMemory) {
@@ -43,6 +41,29 @@ public class LevelZeroPowerMonitor {
         return result;
     }
 
-    public 
+    public double calculatePowerUsage(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters) {
+
+        if (initialEnergyCounters.size() != finalEnergyCounters.size()) {
+            throw new IllegalArgumentException("Initial and final energy counter lists must be the same size.");
+        }
+
+        long totalEnergyUsed = 0;
+        long totalTimeElapsed = 0;
+
+        for (int i = 0; i < initialEnergyCounters.size(); i++) {
+            ZesPowerEnergyCounter initialCounter = initialEnergyCounters.get(i);
+            ZesPowerEnergyCounter finalCounter = finalEnergyCounters.get(i);
+
+            long initialEnergy = initialCounter.getEnergy();
+            long initialTimestamp = initialCounter.getTimestamp();
+            long finalEnergy = finalCounter.getEnergy();
+            long finalTimestamp = finalCounter.getTimestamp();
+
+            totalEnergyUsed += finalEnergy - initialEnergy;
+            totalTimeElapsed += finalTimestamp - initialTimestamp;
+        }
+
+        return totalTimeElapsed != 0 ? (double) totalEnergyUsed / totalTimeElapsed * 1000 : 0.0;
+    } 
 
 }

@@ -199,53 +199,6 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
 
 }
 
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    calculatePowerUsage
- * Signature: (Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZesPowerEnergyCounter;Luk/ac/manchester/tornado/drivers/spirv/levelzero/ZesPowerEnergyCounter;)D
- */
-JNIEXPORT jdouble JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_calculatePowerUsage
-  (JNIEnv *env, jobject obj, jobject initialEnergyCounters, jobject finalEnergyCounters){
-    
-    jclass arrayListClass = env->GetObjectClass(initialEnergyCounters);
-    jmethodID getMethod = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
-    jmethodID sizeMethod = env->GetMethodID(arrayListClass, "size", "()I");
-
-    
-    jint size = env->CallIntMethod(initialEnergyCounters, sizeMethod);
-    
-    jclass energyCounterClass = env->FindClass("uk/ac/manchester/tornado/drivers/spirv/levelzero/ZesPowerEnergyCounter");
-    jfieldID energyField = env->GetFieldID(energyCounterClass, "energy", "J");
-    jfieldID timestampField = env->GetFieldID(energyCounterClass, "timestamp", "J");
-
-    uint64_t totalEnergyUsed = 0;
-    uint64_t totalTimeElapsed = 0;
-
-    for (jint i = 0; i < size; ++i) {
-       
-        jobject initialEnergyCounter = env->CallObjectMethod(initialEnergyCounters, getMethod, i);
-        jobject finalEnergyCounter = env->CallObjectMethod(finalEnergyCounters, getMethod, i);
-
-        jlong initialEnergy = env->GetLongField(initialEnergyCounter, energyField);
-        jlong initialTimestamp = env->GetLongField(initialEnergyCounter, timestampField);
-        jlong finalEnergy = env->GetLongField(finalEnergyCounter, energyField);
-        jlong finalTimestamp = env->GetLongField(finalEnergyCounter, timestampField);
-
-        // Calculate energy used and time elapsed for this domain
-        totalEnergyUsed += finalEnergy - initialEnergy;
-        totalTimeElapsed += finalTimestamp - initialTimestamp;
-    }
-
-    
-    double powerConsumption = (static_cast<double>(totalTimeElapsed) != 0) 
-        ? (static_cast<double>(totalEnergyUsed) / totalTimeElapsed) * 1000 
-        : 0.0; // mW
-
-    return powerConsumption;
-
-}
-
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    zesDeviceEnumPowerDomains_native
