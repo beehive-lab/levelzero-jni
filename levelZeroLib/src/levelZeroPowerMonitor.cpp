@@ -32,21 +32,12 @@
 #include "ze_log.h"
 #include "zes_api.h"
 
-#define VALIDATECALL(myZeCall) \
-    if (myZeCall != ZE_RESULT_SUCCESS){ \
-        std::cout << "Error at "       \
-            << #myZeCall << ": "       \
-            << __FUNCTION__ << ": "    \
-            << __LINE__ << std::endl;  \
-        std::cout << "Exit with Error Code: " \
-            << "0x" << std::hex \
-            << myZeCall \
-            << std::dec << std::endl; \
-    }
+
 
 bool IsIntegratedGPU(zes_device_handle_t hSysmanDevice) {
     uint32_t numPowerDomains = 0;
-    VALIDATECALL(zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr));
+    ze_result_t result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr);
+    LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
     return numPowerDomains == 0;
 }
 
@@ -172,17 +163,15 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
 
     uint32_t numPowerDomains = 0;
     ze_result_t result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr);
-    if (result != ZE_RESULT_SUCCESS) {
-        std::cerr << "Error enumerating power domains." << std::endl;
-        return nullptr; 
-    }
+    #ifdef LOG_JNI
+    LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
+    #endif
 
     std::vector<zes_pwr_handle_t> powerHandles(numPowerDomains);
     result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, powerHandles.data());
-    if (result != ZE_RESULT_SUCCESS) {
-        std::cerr << "Error getting power handles." << std::endl;
-        return nullptr; 
-    }
+    #ifdef LOG_JNI
+    LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
+    #endif
 
     jclass arrayListClass = env->FindClass("java/util/ArrayList");
     jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
@@ -195,6 +184,9 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
     for (auto &powerHandle : powerHandles) {
         zes_power_energy_counter_t energyCounter = {};
         result = zesPowerGetEnergyCounter(powerHandle, &energyCounter);
+        #ifdef LOG_JNI
+        LOG_ZE_JNI("zesPowerGetEnergyCounter", result);
+        #endif
         if (result == ZE_RESULT_SUCCESS) {
             jobject energyCounterObject = env->NewObject(energyCounterClass, energyCounterConstructor, 
                                                          static_cast<jlong>(energyCounter.energy),
@@ -265,8 +257,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_sys
     jint *arrayContent = static_cast<jint *>(env->GetIntArrayElements(numPowerDomains, 0));
     auto pCount = (uint32_t) arrayContent[0];
     ze_result_t result = zesDeviceEnumPowerDomains(hDevice, &pCount, nullptr);
+    #ifdef LOG_JNI
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
-
+    #endif
     arrayContent[0] = pCount;
     env->ReleaseIntArrayElements(numPowerDomains, arrayContent, 0);
     return result;

@@ -47,7 +47,7 @@ public class TestLevelZeroPowerMonitor {
     
     public static void main(String[] args) throws IOException {
 
-        System.out.println("Level-ZERO JNI Library - TestSysmanPowerFunctions");
+        System.out.println("Level-ZERO JNI Library - TestLevelZeroPowerMonitor");
 
         // Create the Level Zero Driver
         LevelZeroDriver driver = new LevelZeroDriver();

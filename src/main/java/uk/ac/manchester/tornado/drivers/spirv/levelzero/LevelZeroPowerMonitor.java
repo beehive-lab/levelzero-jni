@@ -28,11 +28,6 @@ import java.util.List;
 
 public class LevelZeroPowerMonitor {
     
-    static {
-        // Use -Djava.library.path=./levelZeroLib/build/
-        System.loadLibrary("tornado-levelzero");
-    }
-
     public native long[] ZesInit(long[] deviceHandles);
     public native int checkPowerQueryPossible(long[] allSysmanDevices);
     public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
