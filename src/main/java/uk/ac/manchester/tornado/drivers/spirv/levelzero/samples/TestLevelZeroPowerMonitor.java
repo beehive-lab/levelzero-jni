@@ -117,7 +117,7 @@ public class TestLevelZeroPowerMonitor {
         LevelZeroPowerMonitor powerUsage = new LevelZeroPowerMonitor();
         
         // cast all device handles to sysman handles    
-        long[] sysmanDevices = powerUsage.ZesInit(devicePointers);
+        long[] sysmanDevices = powerUsage.CastToSysmanHandles(devicePointers);
         
         // Check if power query is possible for any devices - any iGPU devices?
         int checkResult = powerUsage.checkPowerQueryPossible(sysmanDevices);

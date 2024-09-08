@@ -33,10 +33,10 @@ extern "C" {
 #endif
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    ZesInit
+ * Method:    CastToSysmanHandles
  * Signature: ([J)[J
  */
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_ZesInit
+JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_CastToSysmanHandles
   (JNIEnv *, jobject, jlongArray);
 
 /*

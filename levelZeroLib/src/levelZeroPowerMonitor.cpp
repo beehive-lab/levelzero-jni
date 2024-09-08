@@ -43,11 +43,11 @@ bool IsIntegratedGPU(zes_device_handle_t hSysmanDevice) {
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    ZesInit
+ * Method:    CastToSysmanHandles
  * Signature: ()[J
  */
 
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_ZesInit
+JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_CastToSysmanHandles
   (JNIEnv* env, jobject obj, jlongArray jDeviceHandles) {
     
     jsize length = env->GetArrayLength(jDeviceHandles);
