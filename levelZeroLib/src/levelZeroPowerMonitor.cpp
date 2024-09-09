@@ -161,7 +161,7 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
  * Method:    zesDeviceEnumPowerDomains_native
  * Signature: (J[I[J)I
  */
-JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_sysman_PowerFunctions_zesDeviceEnumPowerDomains_1native
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_zesDeviceEnumPowerDomains_1native
   (JNIEnv *env, jobject object, jlong deviceHandler, jintArray numPowerDomains, jlongArray hMemory) {
     auto hDevice = reinterpret_cast<ze_device_handle_t>(deviceHandler);
     jint *arrayContent = static_cast<jint *>(env->GetIntArrayElements(numPowerDomains, 0));
