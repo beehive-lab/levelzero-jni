@@ -135,19 +135,17 @@ public class TestLevelZeroPowerMonitor {
         long[] devicesToQuery = powerUsage.getSysmanDevicesToQuery(sysmanDevices);
 
         // Testing with the 1st Sysman device that we can query
-        List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
-
-        // wait 5 seconds - this is what we're measuring
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (devicesToQuery.length > 0) {
+            List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
+            // wait 5 seconds - this is what we're measuring
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            List<ZesPowerEnergyCounter> finalEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
+            double powerUsage_mW = powerUsage.calculatePowerUsage(initialEnergyCounters, finalEnergyCounters);
+            System.out.println("Power Usage: " + powerUsage_mW + " mW");
         }
-
-        List<ZesPowerEnergyCounter> finalEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
-        
-        double powerUsage_mW = powerUsage.calculatePowerUsage(initialEnergyCounters, finalEnergyCounters);
-
-        System.out.println("Power Usage: " + powerUsage_mW + " mW");
     }
 }
