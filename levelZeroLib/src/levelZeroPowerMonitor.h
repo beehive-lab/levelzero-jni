@@ -41,14 +41,6 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    checkPowerQueryPossible
- * Signature: ([J)I
- */
-JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_checkPowerQueryPossible
-  (JNIEnv *, jobject, jlongArray);
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    getSysmanDevicesToQuery
  * Signature: ([J)[J
  */
@@ -62,14 +54,6 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
  */
 JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_getEnergyCounters
   (JNIEnv *, jobject, jlong);
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    calculatePowerUsage
- * Signature: (Ljava/util/List;Ljava/util/List;)D
- */
-JNIEXPORT jdouble JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_calculatePowerUsage
-  (JNIEnv *, jobject, jobject, jobject);
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor

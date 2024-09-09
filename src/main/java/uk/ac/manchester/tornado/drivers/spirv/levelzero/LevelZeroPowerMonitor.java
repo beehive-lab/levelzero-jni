@@ -29,7 +29,6 @@ import java.util.List;
 public class LevelZeroPowerMonitor {
     
     public native long[] CastToSysmanHandles(long[] deviceHandles);
-    public native int checkPowerQueryPossible(long[] allSysmanDevices);
     public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
 
     public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
@@ -39,6 +38,18 @@ public class LevelZeroPowerMonitor {
     public int zesDeviceEnumPowerDomains(long deviceHandler, int[] numPowerDomains, long[] hMemory) {
         int result = zesDeviceEnumPowerDomains_native(deviceHandler, numPowerDomains, hMemory);
         return result;
+    }
+
+    public PowerQueryStatus queryBasedOnPowerDomains(long sysmanDevice) {
+
+        int[] numPowerDomains = new int[1];
+        zesDeviceEnumPowerDomains(sysmanDevice, numPowerDomains, null);
+
+        if (numPowerDomains[0] > 0) {
+            return PowerQueryStatus.SUCCESS;
+        } else {
+            return PowerQueryStatus.NO_POWER_DOMAINS;
+        }
     }
 
     public double calculatePowerUsage(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters) {

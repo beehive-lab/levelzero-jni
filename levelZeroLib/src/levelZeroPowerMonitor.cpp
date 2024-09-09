@@ -34,7 +34,7 @@
 
 
 
-bool IsIntegratedGPU(zes_device_handle_t hSysmanDevice) {
+bool deviceHasNoPowerDomains(zes_device_handle_t hSysmanDevice) {
     uint32_t numPowerDomains = 0;
     ze_result_t result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr);
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
@@ -78,44 +78,6 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    checkPowerQueryPossible
- * Signature: ([J)I
- */
-JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_checkPowerQueryPossible
-  (JNIEnv* env, jobject obj, jlongArray jSysmanDevices){
-
-    jsize length = env->GetArrayLength(jSysmanDevices);
-    std::vector<zes_device_handle_t> allSysmanDevices(length);
-    jlong* elements = env->GetLongArrayElements(jSysmanDevices, nullptr);
-
-    for (jsize i = 0; i < length; ++i) {
-        allSysmanDevices[i] = reinterpret_cast<zes_device_handle_t>(elements[i]);
-    }
-
-    env->ReleaseLongArrayElements(jSysmanDevices, elements, 0);
-
-    if (allSysmanDevices.empty()) {
-        return -1; // No Sysman devices found
-    }
-
-    std::vector<zes_device_handle_t>  sysmanDevicesToQuery;
-    for (auto& sysmanDevice : allSysmanDevices) {
-        if (!IsIntegratedGPU(sysmanDevice)) {
-            sysmanDevicesToQuery.push_back(sysmanDevice);
-        }
-    }
-   
-    if (sysmanDevicesToQuery.empty()) {
-        return -2; // All iGPUs - Cannot calculate power consumption
-    }
-    else{
-        return 0; //Success
-    }
-
-}
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    getSysmanDevicesToQuery
  * Signature: ([J)[J
  */
@@ -133,7 +95,7 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
         
         // Cast jlong to zes_device_handle_t
         zes_device_handle_t hSysmanDevice = reinterpret_cast<zes_device_handle_t>(sysmanDevice);
-        if (!IsIntegratedGPU(hSysmanDevice)) {
+        if (!deviceHasNoPowerDomains(hSysmanDevice)) {
             sysmanDevicesToQuery.push_back(sysmanDevice);
         }
     }
@@ -163,15 +125,12 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
 
     uint32_t numPowerDomains = 0;
     ze_result_t result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr);
-    #ifdef LOG_JNI
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
-    #endif
 
     std::vector<zes_pwr_handle_t> powerHandles(numPowerDomains);
     result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, powerHandles.data());
-    #ifdef LOG_JNI
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
-    #endif
+
 
     jclass arrayListClass = env->FindClass("java/util/ArrayList");
     jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
@@ -184,9 +143,7 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
     for (auto &powerHandle : powerHandles) {
         zes_power_energy_counter_t energyCounter = {};
         result = zesPowerGetEnergyCounter(powerHandle, &energyCounter);
-        #ifdef LOG_JNI
         LOG_ZE_JNI("zesPowerGetEnergyCounter", result);
-        #endif
         if (result == ZE_RESULT_SUCCESS) {
             jobject energyCounterObject = env->NewObject(energyCounterClass, energyCounterConstructor, 
                                                          static_cast<jlong>(energyCounter.energy),
@@ -210,9 +167,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_sys
     jint *arrayContent = static_cast<jint *>(env->GetIntArrayElements(numPowerDomains, 0));
     auto pCount = (uint32_t) arrayContent[0];
     ze_result_t result = zesDeviceEnumPowerDomains(hDevice, &pCount, nullptr);
-    #ifdef LOG_JNI
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
-    #endif
     arrayContent[0] = pCount;
     env->ReleaseIntArrayElements(numPowerDomains, arrayContent, 0);
     return result;

@@ -25,12 +25,14 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero.samples;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDevice;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDriver;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroPowerMonitor;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.PowerQueryStatus;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeAPIVersion;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDescriptor;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceProperties;
@@ -111,6 +113,7 @@ public class TestLevelZeroPowerMonitor {
         System.out.println("Type     : " + deviceProperties.getType());
         System.out.println("Vendor ID: " + deviceProperties.getVendorId());
 
+        
         // get all device handles
         long[] devicePointers = deviceHandler.getDevicePointers();
         
@@ -118,24 +121,24 @@ public class TestLevelZeroPowerMonitor {
         
         // cast all device handles to sysman handles    
         long[] sysmanDevices = powerUsage.CastToSysmanHandles(devicePointers);
-        
-        // Check if power query is possible for any devices - any iGPU devices?
-        int checkResult = powerUsage.checkPowerQueryPossible(sysmanDevices);
 
-        if (checkResult == -1) {
-            System.out.println("Power query is not possible. No sysman devices found.");
-        } else if (checkResult == -2 ) {
-            System.err.println("Power query is not possible. All devices are Integrated GPUs.");
+        if (sysmanDevices.length == 0) {
+            throw new IllegalStateException("No sysman devices found.");
         }
-        else {
-            // Success - There are query-able devices (at least one dGPU)
-        }
-
         // Get only the devices that we can query (dGPUs)
         long[] devicesToQuery = powerUsage.getSysmanDevicesToQuery(sysmanDevices);
 
         // Testing with the 1st Sysman device that we can query
         if (devicesToQuery.length > 0) {
+
+            PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(devicesToQuery[0]);
+
+            if (queryStatus == PowerQueryStatus.SUCCESS) {
+                System.out.println("Power query is possible for device " + devicesToQuery[0]);
+            } else if (queryStatus == PowerQueryStatus.NO_POWER_DOMAINS) {
+                throw new IllegalStateException("No power domains found for device " + devicesToQuery[0]);
+            }
+
             List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
             // wait 5 seconds - this is what we're measuring
             try {
