@@ -80,26 +80,29 @@ JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelze
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    getEnergyCounters
- * Signature: (J)Ljava/util/List;
+ * Method:    getEnergyCounters_native
+ * Signature: (J[I[J)I
  */
-JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_getEnergyCounters
-  (JNIEnv *env, jobject obj, jlong sysmanDeviceHandle){
+JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_getEnergyCounters_1native
+  (JNIEnv *env, jobject obj, jlong sysmanDeviceHandle, jobject energyCounterList){
 
     zes_device_handle_t hSysmanDevice = reinterpret_cast<zes_device_handle_t>(sysmanDeviceHandle);
 
     uint32_t numPowerDomains = 0;
     ze_result_t result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, nullptr);
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
+    if (result != ZE_RESULT_SUCCESS) {
+        return result; 
+    }
 
     std::vector<zes_pwr_handle_t> powerHandles(numPowerDomains);
     result = zesDeviceEnumPowerDomains(hSysmanDevice, &numPowerDomains, powerHandles.data());
     LOG_ZE_JNI("zesDeviceEnumPowerDomains", result);
+    if (result != ZE_RESULT_SUCCESS) {
+        return result;
+    }
 
-
-    jclass arrayListClass = env->FindClass("java/util/ArrayList");
-    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
-    jobject energyCounterList = env->NewObject(arrayListClass, arrayListConstructor);
+    jclass arrayListClass = env->GetObjectClass(energyCounterList);
     jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
 
     jclass energyCounterClass = env->FindClass("uk/ac/manchester/tornado/drivers/spirv/levelzero/ZesPowerEnergyCounter");
@@ -109,15 +112,17 @@ JNIEXPORT jobject JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_
         zes_power_energy_counter_t energyCounter = {};
         result = zesPowerGetEnergyCounter(powerHandle, &energyCounter);
         LOG_ZE_JNI("zesPowerGetEnergyCounter", result);
+
         if (result == ZE_RESULT_SUCCESS) {
             jobject energyCounterObject = env->NewObject(energyCounterClass, energyCounterConstructor, 
                                                          static_cast<jlong>(energyCounter.energy),
                                                          static_cast<jlong>(energyCounter.timestamp));
             env->CallBooleanMethod(energyCounterList, arrayListAdd, energyCounterObject);
+        } else {
+            return result;
         }
     }
-
-    return energyCounterList;
+    return result; 
 
 }
 

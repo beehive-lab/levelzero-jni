@@ -40,6 +40,7 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDevicesHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverHandle;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDriverProperties;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeInitFlag;
+import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeResult;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.Ze_Structure_Type;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZesPowerEnergyCounter;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
@@ -107,8 +108,6 @@ public class TestLevelZeroPowerMonitor {
         
         ZeDeviceProperties deviceProperties = new ZeDeviceProperties();
      
-
-        
         // get all device handles
         long[] devicePointers = deviceHandler.getDevicePointers();
         
@@ -129,19 +128,32 @@ public class TestLevelZeroPowerMonitor {
             PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);
 
             if (queryStatus == PowerQueryStatus.SUCCESS) {
-                System.out.println("Power query is possible for device " + deviceProperties.getName());
+                System.out.println("Power query is possible for device: " + deviceProperties.getName());
             } else if (queryStatus == PowerQueryStatus.NO_POWER_DOMAINS) {
-                throw new IllegalStateException("No power domains found for device " + deviceProperties.getName());
+                throw new IllegalStateException("No power domains found for device: " + deviceProperties.getName());
             }
 
-            List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(sysmanDevice);
+            List<ZesPowerEnergyCounter> initialEnergyCounters = new ArrayList<>();
+            result = powerUsage.getEnergyCounters(sysmanDevice, initialEnergyCounters);
+
+            if (result != ZeResult.ZE_RESULT_SUCCESS) {
+                throw new RuntimeException("Failed to get initial energy counters. Error code: " + result);
+            }
+
             // wait 5 seconds - this is what we're measuring
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            List<ZesPowerEnergyCounter> finalEnergyCounters = powerUsage.getEnergyCounters(sysmanDevice);
+
+            List<ZesPowerEnergyCounter> finalEnergyCounters = new ArrayList<>();
+            result = powerUsage.getEnergyCounters(sysmanDevice, finalEnergyCounters);
+
+            if (result != ZeResult.ZE_RESULT_SUCCESS) {
+                throw new RuntimeException("Failed to get final energy counters. Error code: " + result);
+            }
+            
             double powerUsage_mW = powerUsage.calculatePowerUsage(initialEnergyCounters, finalEnergyCounters);
             System.out.println("Power Usage: " + powerUsage_mW + " mW");
         }

@@ -24,19 +24,29 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelZeroPowerMonitor {
 
     public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
 
-    public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
+    // public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
 
     private native int zesDeviceEnumPowerDomains_native(long deviceHandler, int[] numPowerDomains, long[] hMemory);
 
     public int zesDeviceEnumPowerDomains(long deviceHandler, int[] numPowerDomains, long[] hMemory) {
         int result = zesDeviceEnumPowerDomains_native(deviceHandler, numPowerDomains, hMemory);
         return result;
+    }
+
+    public native int getEnergyCounters_native(long sysmanDeviceHandle, List<ZesPowerEnergyCounter> energyCounterList);
+    
+    public int getEnergyCounters(long sysmanDeviceHandle, List<ZesPowerEnergyCounter> energyCounterList) {
+        
+        int result = getEnergyCounters(sysmanDeviceHandle, energyCounterList);
+        return result;
+        
     }
 
     public PowerQueryStatus queryBasedOnPowerDomains(long sysmanDevice) {
