@@ -125,9 +125,14 @@ public class TestLevelZeroPowerMonitor {
         if (sysmanDevices.length == 0) {
             throw new IllegalStateException("No sysman devices found.");
         }
+
+	// print device handle and the sysman handle for it 
+        for (int i = 0; i < devicePointers.length; i++) {
+            System.out.println("Device Handle: " + devicePointers[i] + " Sysman Handle: " + sysmanDevices[i]);
+        }
         
         // loop through sysmanDevices and get the devices to query
-        for (long sysmanDevice : sysmanDevices) {
+        for (long sysmanDevice : devicePointers) {
 
             PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);
 
