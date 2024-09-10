@@ -43,41 +43,6 @@ bool deviceHasNoPowerDomains(zes_device_handle_t hSysmanDevice) {
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    castToSysmanHandles
- * Signature: ()[J
- */
-
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_castToSysmanHandles
-  (JNIEnv* env, jobject obj, jlongArray jDeviceHandles) {
-    
-    jsize length = env->GetArrayLength(jDeviceHandles);
-    jlong* deviceElements = env->GetLongArrayElements(jDeviceHandles, nullptr);
-
-    std::vector<zes_device_handle_t> sysmanHandles;
-
-    for (jsize i = 0; i < length; ++i) {
-        ze_device_handle_t deviceHandle = reinterpret_cast<ze_device_handle_t>(deviceElements[i]);
-        zes_device_handle_t sysmanHandle = reinterpret_cast<zes_device_handle_t>(deviceHandle);
-        sysmanHandles.push_back(sysmanHandle);
-    }
-
-    env->ReleaseLongArrayElements(jDeviceHandles, deviceElements, 0);
-
-    jlongArray result = env->NewLongArray(sysmanHandles.size());
-    jlong* sysmanElements = env->GetLongArrayElements(result, nullptr);
-
-    for (size_t i = 0; i < sysmanHandles.size(); ++i) {
-        sysmanElements[i] = reinterpret_cast<jlong>(sysmanHandles[i]);
-    }
-
-    env->ReleaseLongArrayElements(result, sysmanElements, 0);
-
-    return result;
-}
-
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    getSysmanDevicesToQuery
  * Signature: ([J)[J
  */

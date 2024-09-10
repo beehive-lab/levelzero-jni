@@ -118,20 +118,11 @@ public class TestLevelZeroPowerMonitor {
         long[] devicePointers = deviceHandler.getDevicePointers();
         
         LevelZeroPowerMonitor powerUsage = new LevelZeroPowerMonitor();
-        
-        // cast all device handles to sysman handles    
-        long[] sysmanDevices = powerUsage.castToSysmanHandles(devicePointers);
-
-        if (sysmanDevices.length == 0) {
-            throw new IllegalStateException("No sysman devices found.");
+      
+        if (devicePointers.length == 0) {
+            throw new IllegalStateException("No devices found.");
         }
 
-	// print device handle and the sysman handle for it 
-        for (int i = 0; i < devicePointers.length; i++) {
-            System.out.println("Device Handle: " + devicePointers[i] + " Sysman Handle: " + sysmanDevices[i]);
-        }
-        
-        // loop through sysmanDevices and get the devices to query
         for (long sysmanDevice : devicePointers) {
 
             PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);

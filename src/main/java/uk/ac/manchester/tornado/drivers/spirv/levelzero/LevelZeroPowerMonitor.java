@@ -28,7 +28,6 @@ import java.util.List;
 
 public class LevelZeroPowerMonitor {
 
-    public native long[] castToSysmanHandles(long[] deviceHandles);
     public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
 
     public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
