@@ -120,7 +120,7 @@ public class TestLevelZeroPowerMonitor {
         LevelZeroPowerMonitor powerUsage = new LevelZeroPowerMonitor();
         
         // cast all device handles to sysman handles    
-        long[] sysmanDevices = powerUsage.CastToSysmanHandles(devicePointers);
+        long[] sysmanDevices = powerUsage.castToSysmanHandles(devicePointers);
 
         if (sysmanDevices.length == 0) {
             throw new IllegalStateException("No sysman devices found.");

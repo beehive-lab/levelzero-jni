@@ -25,7 +25,7 @@
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
 public enum PowerQueryStatus {
-    SUCCESS(0, "Power query was successful"),
+    SUCCESS(0, "Power is possible"),
     NO_POWER_DOMAINS(-2, "No devices with power domains found");
 
     private final int code;

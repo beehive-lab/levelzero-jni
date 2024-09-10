@@ -43,11 +43,11 @@ bool deviceHasNoPowerDomains(zes_device_handle_t hSysmanDevice) {
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    CastToSysmanHandles
+ * Method:    castToSysmanHandles
  * Signature: ()[J
  */
 
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_CastToSysmanHandles
+JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_castToSysmanHandles
   (JNIEnv* env, jobject obj, jlongArray jDeviceHandles) {
     
     jsize length = env->GetArrayLength(jDeviceHandles);
