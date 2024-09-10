@@ -104,14 +104,9 @@ public class TestLevelZeroPowerMonitor {
         // ============================================
         // Query device properties
         // ============================================
-        LevelZeroDevice device = driver.getDevice(driverHandler, 0);
-
+        
         ZeDeviceProperties deviceProperties = new ZeDeviceProperties();
-        result = device.zeDeviceGetProperties(device.getDeviceHandlerPtr(), deviceProperties);
-        LevelZeroUtils.errorLog("zeDeviceGetProperties", result);
-        System.out.println("Device   : " + deviceProperties.getName());
-        System.out.println("Type     : " + deviceProperties.getType());
-        System.out.println("Vendor ID: " + deviceProperties.getVendorId());
+     
 
         
         // get all device handles
@@ -123,14 +118,20 @@ public class TestLevelZeroPowerMonitor {
             throw new IllegalStateException("No devices found.");
         }
 
-        for (long sysmanDevice : devicePointers) {
+        for (int i = 0; i < devicePointers.length; i++) {
 
+            long sysmanDevice = devicePointers[i];
+            LevelZeroDevice device = driver.getDevice(driverHandler, i);
+    
+            result = device.zeDeviceGetProperties(device.getDeviceHandlerPtr(), deviceProperties);
+            LevelZeroUtils.errorLog("zeDeviceGetProperties", result);
+            
             PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);
 
             if (queryStatus == PowerQueryStatus.SUCCESS) {
-                System.out.println("Power query is possible for device " + sysmanDevice);
+                System.out.println("Power query is possible for device " + deviceProperties.getName());
             } else if (queryStatus == PowerQueryStatus.NO_POWER_DOMAINS) {
-                throw new IllegalStateException("No power domains found for device " + sysmanDevice);
+                throw new IllegalStateException("No power domains found for device " + deviceProperties.getName());
             }
 
             List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(sysmanDevice);
