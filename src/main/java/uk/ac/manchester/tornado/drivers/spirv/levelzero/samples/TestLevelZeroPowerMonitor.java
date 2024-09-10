@@ -125,28 +125,26 @@ public class TestLevelZeroPowerMonitor {
         if (sysmanDevices.length == 0) {
             throw new IllegalStateException("No sysman devices found.");
         }
-        // Get only the devices that we can query (dGPUs)
-        long[] devicesToQuery = powerUsage.getSysmanDevicesToQuery(sysmanDevices);
+        
+        // loop through sysmanDevices and get the devices to query
+        for (long sysmanDevice : sysmanDevices) {
 
-        // Testing with the 1st Sysman device that we can query
-        if (devicesToQuery.length > 0) {
-
-            PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(devicesToQuery[0]);
+            PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);
 
             if (queryStatus == PowerQueryStatus.SUCCESS) {
-                System.out.println("Power query is possible for device " + devicesToQuery[0]);
+                System.out.println("Power query is possible for device " + sysmanDevice);
             } else if (queryStatus == PowerQueryStatus.NO_POWER_DOMAINS) {
-                throw new IllegalStateException("No power domains found for device " + devicesToQuery[0]);
+                throw new IllegalStateException("No power domains found for device " + sysmanDevice);
             }
 
-            List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
+            List<ZesPowerEnergyCounter> initialEnergyCounters = powerUsage.getEnergyCounters(sysmanDevice);
             // wait 5 seconds - this is what we're measuring
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            List<ZesPowerEnergyCounter> finalEnergyCounters = powerUsage.getEnergyCounters(devicesToQuery[0]);
+            List<ZesPowerEnergyCounter> finalEnergyCounters = powerUsage.getEnergyCounters(sysmanDevice);
             double powerUsage_mW = powerUsage.calculatePowerUsage(initialEnergyCounters, finalEnergyCounters);
             System.out.println("Power Usage: " + powerUsage_mW + " mW");
         }
