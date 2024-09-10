@@ -44,7 +44,7 @@ public class LevelZeroPowerMonitor {
     
     public int getEnergyCounters(long sysmanDeviceHandle, List<ZesPowerEnergyCounter> energyCounterList) {
         
-        int result = getEnergyCounters(sysmanDeviceHandle, energyCounterList);
+        int result = getEnergyCounters_native(sysmanDeviceHandle, energyCounterList);
         return result;
         
     }
