@@ -64,7 +64,7 @@ public class LevelZeroPowerMonitor {
     public double calculatePowerUsage(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters) {
 
         if (initialEnergyCounters.size() != finalEnergyCounters.size()) {
-            throw new IllegalArgumentException("Initial and final energy counter lists must be the same size.");
+            throw new IllegalArgumentException("Initial and final energy counter lists must have the same size.");
         }
 
         long totalEnergyUsed = 0;
