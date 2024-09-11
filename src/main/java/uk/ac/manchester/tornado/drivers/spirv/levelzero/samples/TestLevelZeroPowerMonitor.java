@@ -32,7 +32,6 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroContext;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDevice;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroDriver;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.LevelZeroPowerMonitor;
-import uk.ac.manchester.tornado.drivers.spirv.levelzero.PowerQueryStatus;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeAPIVersion;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeContextDescriptor;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZeDeviceProperties;
@@ -46,7 +45,6 @@ import uk.ac.manchester.tornado.drivers.spirv.levelzero.ZesPowerEnergyCounter;
 import uk.ac.manchester.tornado.drivers.spirv.levelzero.utils.LevelZeroUtils;
 
 public class TestLevelZeroPowerMonitor {
-    
     
     public static void main(String[] args) throws IOException {
 
@@ -125,11 +123,11 @@ public class TestLevelZeroPowerMonitor {
             result = device.zeDeviceGetProperties(device.getDeviceHandlerPtr(), deviceProperties);
             LevelZeroUtils.errorLog("zeDeviceGetProperties", result);
             
-            PowerQueryStatus queryStatus = powerUsage.queryBasedOnPowerDomains(sysmanDevice);
+            boolean queryStatus = powerUsage.getPowerSupportStatusForDevice(sysmanDevice);
 
-            if (queryStatus == PowerQueryStatus.SUCCESS) {
+            if (queryStatus) {
                 System.out.println("Power query is possible for device: " + deviceProperties.getName());
-            } else if (queryStatus == PowerQueryStatus.NO_POWER_DOMAINS) {
+            } else {
                 throw new IllegalStateException("No power domains found for device: " + deviceProperties.getName());
             }
 
@@ -154,7 +152,7 @@ public class TestLevelZeroPowerMonitor {
                 throw new RuntimeException("Failed to get final energy counters. Error code: " + result);
             }
             
-            double powerUsage_mW = powerUsage.calculatePowerUsage(initialEnergyCounters, finalEnergyCounters);
+            double powerUsage_mW = powerUsage.calculatePowerUsage_mW(initialEnergyCounters, finalEnergyCounters);
             System.out.println("Power Usage: " + powerUsage_mW + " mW");
         }
     }

@@ -24,14 +24,9 @@
  */
 package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LevelZeroPowerMonitor {
-
-    public native long[] getSysmanDevicesToQuery(long[] allSysmanDevices);
-
-    // public native List<ZesPowerEnergyCounter> getEnergyCounters(long sysmanDeviceHandle);
 
     private native int zesDeviceEnumPowerDomains_native(long deviceHandler, int[] numPowerDomains, long[] hMemory);
 
@@ -43,33 +38,32 @@ public class LevelZeroPowerMonitor {
     public native int getEnergyCounters_native(long sysmanDeviceHandle, List<ZesPowerEnergyCounter> energyCounterList);
     
     public int getEnergyCounters(long sysmanDeviceHandle, List<ZesPowerEnergyCounter> energyCounterList) {
-        
         int result = getEnergyCounters_native(sysmanDeviceHandle, energyCounterList);
-        return result;
-        
+        return result;  
     }
 
-    public PowerQueryStatus queryBasedOnPowerDomains(long sysmanDevice) {
-
+    /**
+     * Checks the power support status for a given device.
+     *
+     * @param sysmanDevice the device to check the power support status for
+     * @return true if the device supports power (has 1 or more power domains), false otherwise
+     */
+    public boolean getPowerSupportStatusForDevice(long sysmanDevice) {
         int[] numPowerDomains = new int[1];
         zesDeviceEnumPowerDomains(sysmanDevice, numPowerDomains, null);
-
         if (numPowerDomains[0] > 0) {
-            return PowerQueryStatus.SUCCESS;
+            return true;
         } else {
-            return PowerQueryStatus.NO_POWER_DOMAINS;
+            return false;
         }
     }
 
-    public double calculatePowerUsage(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters) {
-
+    public double calculatePowerUsage_mW(List<ZesPowerEnergyCounter> initialEnergyCounters, List<ZesPowerEnergyCounter> finalEnergyCounters) {
         if (initialEnergyCounters.size() != finalEnergyCounters.size()) {
             throw new IllegalArgumentException("Initial and final energy counter lists must have the same size.");
         }
-
         long totalEnergyUsed = 0;
         long totalTimeElapsed = 0;
-
         for (int i = 0; i < initialEnergyCounters.size(); i++) {
             ZesPowerEnergyCounter initialCounter = initialEnergyCounters.get(i);
             ZesPowerEnergyCounter finalCounter = finalEnergyCounters.get(i);
@@ -82,8 +76,6 @@ public class LevelZeroPowerMonitor {
             totalEnergyUsed += finalEnergy - initialEnergy;
             totalTimeElapsed += finalTimestamp - initialTimestamp;
         }
-
         return totalTimeElapsed != 0 ? (double) totalEnergyUsed / totalTimeElapsed * 1000 : 0.0;
     } 
-
 }

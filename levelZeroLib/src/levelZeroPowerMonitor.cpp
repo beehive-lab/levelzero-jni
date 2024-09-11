@@ -43,43 +43,6 @@ bool deviceHasNoPowerDomains(zes_device_handle_t hSysmanDevice) {
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    getSysmanDevicesToQuery
- * Signature: ([J)[J
- */
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_getSysmanDevicesToQuery
-  (JNIEnv* env, jobject obj, jlongArray jSysmanDevices){
-
-    // Convert jlongArray to a C++ array
-    jsize length = env->GetArrayLength(jSysmanDevices);
-    jlong* sysmanDevices = env->GetLongArrayElements(jSysmanDevices, NULL);
-
-    std::vector<jlong> sysmanDevicesToQuery;
-
-    for (jsize i = 0; i < length; ++i) {
-        jlong sysmanDevice = sysmanDevices[i];
-        
-        // Cast jlong to zes_device_handle_t
-        zes_device_handle_t hSysmanDevice = reinterpret_cast<zes_device_handle_t>(sysmanDevice);
-        if (!deviceHasNoPowerDomains(hSysmanDevice)) {
-            sysmanDevicesToQuery.push_back(sysmanDevice);
-        }
-    }
-
-    env->ReleaseLongArrayElements(jSysmanDevices, sysmanDevices, 0);
-
-    jlongArray sysmanDevicesArray = env->NewLongArray(sysmanDevicesToQuery.size());
-    if (sysmanDevicesArray == NULL) {
-        return NULL; // Out of memory error
-    }
-
-    env->SetLongArrayRegion(sysmanDevicesArray, 0, sysmanDevicesToQuery.size(), sysmanDevicesToQuery.data());
-
-    return sysmanDevicesArray;
-
-}
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    getEnergyCounters_native
  * Signature: (J[I[J)I
  */

@@ -33,14 +33,6 @@ extern "C" {
 #endif
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
- * Method:    getSysmanDevicesToQuery
- * Signature: ([J)[J
- */
-JNIEXPORT jlongArray JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor_getSysmanDevicesToQuery
-  (JNIEnv *, jobject, jlongArray);
-
-/*
- * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroPowerMonitor
  * Method:    getEnergyCounters_native
  * Signature: (J)Ljava/util/List;
  */
