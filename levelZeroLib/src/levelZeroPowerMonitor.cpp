@@ -27,7 +27,6 @@
 #include <iostream>
 #include <vector>
 
-
 #include "ze_api.h"
 #include "ze_log.h"
 #include "zes_api.h"
