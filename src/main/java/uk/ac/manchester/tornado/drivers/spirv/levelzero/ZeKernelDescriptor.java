@@ -32,7 +32,6 @@ public class ZeKernelDescriptor extends LevelZeroDescriptor {
     private long ptrZeKernelDesc;
 
     public ZeKernelDescriptor() {
-        pNext = -1;
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_KERNEL_DESC;
     }
 

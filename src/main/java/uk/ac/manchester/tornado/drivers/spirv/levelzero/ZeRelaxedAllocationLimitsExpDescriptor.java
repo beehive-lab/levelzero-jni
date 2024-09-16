@@ -37,9 +37,7 @@ public class ZeRelaxedAllocationLimitsExpDescriptor extends LevelZeroDescriptor 
     private int flags;
 
     public ZeRelaxedAllocationLimitsExpDescriptor() {
-        pNext = -1;
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_RELAXED_ALLOCATION_LIMITS_EXP_DESC;
-        selfPtr = -1;
     }
 
     private native void materializeNative_ZeRelaxedAllocationLimitsExpDescriptor();

@@ -34,7 +34,6 @@ public class ZeFenceDescriptor extends LevelZeroDescriptor {
     private long ptrZeFenceDesc;
 
     public ZeFenceDescriptor() {
-        pNext = -1;
         stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_FENCE_DESC;
     }
 
