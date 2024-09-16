@@ -101,7 +101,7 @@ public class TestKernelTimer {
 
     // Test Program
     public static void main(String[] args) throws IOException {
-        System.out.println("Level-ZERO JNI Library - TestFences");
+        System.out.println("Level-ZERO JNI Library - TestKernelTimer");
 
         // Create the Level Zero Driver
         LevelZeroDriver driver = new LevelZeroDriver();
