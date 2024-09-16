@@ -84,6 +84,7 @@ add_library(tornado-levelzero SHARED
 	src/levelZeroFence.cpp
 	src/levelZeroTimeStampKernel.cpp
 	src/levelZeroDescriptors.cpp
+	src/levelZeroPowerMonitor.cpp
 )
 
 target_link_libraries(tornado-levelzero ${OpenCL_LIBRARIES} ${JNI_LIB_DIRS})

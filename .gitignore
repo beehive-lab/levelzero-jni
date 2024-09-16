@@ -5,3 +5,4 @@ levelzero.iml
 *.log
 target/
 .idea/
+.vscode/
