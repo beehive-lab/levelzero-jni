@@ -328,7 +328,18 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     env->SetIntField(javaCommandQueueDescriptor, field, commandQueueDesc.stype);
 
     field = env->GetFieldID(commanddescriptorClass, "pNext", "J");
-    env->SetLongField(javaCommandQueueDescriptor, field, reinterpret_cast<jlong>(commandQueueDesc.pNext));
+#ifdef _WIN32
+    jlong pNext = env->GetLongField(javaCommandQueueDescriptor, field);
+#else
+    jint pNext = env->GetLongField(javaCommandQueueDescriptor, field);
+#endif
+    if (pNext != -1) {
+#ifdef _WIN32
+        commandQueueDesc.pNext = reinterpret_cast<int64_t *>(pNext);
+#else
+        commandQueueDesc.pNext = reinterpret_cast<const void *>(pNext);
+#endif
+    }
 
     field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
     env->SetLongField(javaCommandQueueDescriptor, field, commandQueueDesc.ordinal);
@@ -389,7 +400,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.ordinal = ordinalDeviceDesc;
     deviceDesc.flags = flagDeviceDesc;
     if (pnextDeviceAlloc != -1) {
-        deviceDesc.pNext = reinterpret_cast<void *>(pnextDeviceAlloc);
+#ifdef _WIN32
+        deviceDesc.pNext = reinterpret_cast<int64_t *>(pnextDeviceAlloc);
+#else
+        deviceDesc.pNext = reinterpret_cast<const void *>(pnextDeviceAlloc);
+#endif
     }
 
     jclass javaHostMemAllocDescClass = env->GetObjectClass(javaHostMemAllocDesc);
@@ -399,20 +414,24 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 #ifdef _WIN32
     int64_t flagsHostDesc = env->GetLongField(javaHostMemAllocDesc, fieldFlagsHostDesc);
 
-    jfieldID fieldPNextHostAlloc = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    int64_t pnextHostAlloc = env->GetLongField(javaDeviceMemAllocDesc, fieldPNextHostAlloc);
+    jfieldID fieldPNextHostAlloc = env->GetFieldID(javaHostMemAllocDescClass, "pNext", "J");
+    int64_t pnextHostAlloc = env->GetLongField(javaHostMemAllocDesc, fieldPNextHostAlloc);
 #else
     long flagsHostDesc = env->GetLongField(javaHostMemAllocDesc, fieldFlagsHostDesc);
 
-    jfieldID fieldPNextHostAlloc = env->GetFieldID(javaDeviceMemAllocDescClass, "pNext", "J");
-    ulong pnextHostAlloc = env->GetLongField(javaDeviceMemAllocDesc, fieldPNextHostAlloc);
+    jfieldID fieldPNextHostAlloc = env->GetFieldID(javaHostMemAllocDescClass, "pNext", "J");
+    ulong pnextHostAlloc = env->GetLongField(javaHostMemAllocDesc, fieldPNextHostAlloc);
 #endif
 
     ze_host_mem_alloc_desc_t hostDesc;
     hostDesc.stype = static_cast<ze_structure_type_t>(typeHostDesc);
     hostDesc.flags = flagsHostDesc;
     if (pnextHostAlloc != -1) {
-        hostDesc.pNext = reinterpret_cast<void *>(pnextHostAlloc);
+#ifdef _WIN32
+        hostDesc.pNext = reinterpret_cast<int64_t *>(pnextHostAlloc);
+#else
+        hostDesc.pNext = reinterpret_cast<const void *>(pnextHostAlloc);
+#endif
     }
 
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
@@ -465,7 +484,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.flags = flagDeviceDesc;
 
     if (pnextDeviceAlloc != -1) {
-        deviceDesc.pNext = reinterpret_cast<void *>(pnextDeviceAlloc);
+#ifdef _WIN32
+        deviceDesc.pNext = reinterpret_cast<int64_t *>(pnextDeviceAlloc);
+#else
+        deviceDesc.pNext = reinterpret_cast<const void *>(pnextDeviceAlloc);
+#endif
     }
 
     jclass javaHostMemAllocDescClass = env->GetObjectClass(javaHostMemAllocDesc);
@@ -489,7 +512,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     hostDesc.flags = flagsHostDesc;
 
     if (pnextHostAlloc != -1) {
-        hostDesc.pNext = reinterpret_cast<void *>(pnextHostAlloc);
+#ifdef _WIN32
+        hostDesc.pNext = reinterpret_cast<int64_t *>(pnextHostAlloc);
+#else
+        hostDesc.pNext = reinterpret_cast<const void *>(pnextHostAlloc);
+#endif
     }
 
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
@@ -542,7 +569,11 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.flags = flagDeviceDesc;
 
     if (pnextDeviceAlloc != -1) {
-        deviceDesc.pNext = reinterpret_cast<void *>(pnextDeviceAlloc);
+#ifdef _WIN32
+        deviceDesc.pNext = reinterpret_cast<int64_t *>(pnextDeviceAlloc);
+#else
+        deviceDesc.pNext = reinterpret_cast<const void *>(pnextDeviceAlloc);
+#endif
     }
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
@@ -596,14 +627,17 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     ulong pnextDeviceAlloc = env->GetLongField(javaDeviceMemAllocDesc, fieldPNextMemAlloc);
 #endif
 
-
     ze_device_mem_alloc_desc_t deviceDesc = {};
     deviceDesc.stype = static_cast<ze_structure_type_t>(typeDeviceDesc);
     deviceDesc.ordinal = ordinalDeviceDesc;
     deviceDesc.flags = flagDeviceDesc;
 
     if (pnextDeviceAlloc != -1) {
-        deviceDesc.pNext = reinterpret_cast<void *>(pnextDeviceAlloc);
+#ifdef _WIN32
+        deviceDesc.pNext = reinterpret_cast<int64_t *>(pnextDeviceAlloc);
+#else
+        deviceDesc.pNext = reinterpret_cast<const void *>(pnextDeviceAlloc);
+#endif
     }
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
@@ -815,7 +849,13 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 
     ze_event_pool_desc_t eventPoolDescriptor = {};
     eventPoolDescriptor.stype = static_cast<ze_structure_type_t>(stype);
-    eventPoolDescriptor.pNext = reinterpret_cast<const void *>(pNext);
+    if (pNext != -1) {
+#ifdef _WIN32
+        eventPoolDescriptor.pNext = reinterpret_cast<int64_t *>(pNext);
+#else
+        eventPoolDescriptor.pNext = reinterpret_cast<const void *>(pNext);
+#endif
+    }
     eventPoolDescriptor.count = count;
     eventPoolDescriptor.flags = flags;
 
@@ -996,7 +1036,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
 #ifdef _WIN32
         hostDescriptor.pNext = reinterpret_cast<int64_t *>(pnextHostAlloc);
 #else
-        hostDescriptor.pNext = reinterpret_cast<void *>(pnextHostAlloc);
+        hostDescriptor.pNext = reinterpret_cast<const void *>(pnextHostAlloc);
 #endif
     }
 
