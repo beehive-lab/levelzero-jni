@@ -34,7 +34,6 @@ public class ZeDeviceMemAllocDescriptor extends LevelZeroDescriptor {
     public ZeDeviceMemAllocDescriptor() {
         this.stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_DEVICE_MEM_ALLOC_DESC;
         this.ptrZeDeviceMemAllocDesc = -1;
-        this.pNext = -1;
     }
 
     private native void materializeNative_ZeDeviceMemAllocDescriptor();

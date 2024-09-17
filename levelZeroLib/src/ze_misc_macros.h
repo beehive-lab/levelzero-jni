@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021, APT Group, Department of Computer Science,
+ * Copyright (c) 2024, APT Group, Department of Computer Science,
  * The University of Manchester.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,45 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package uk.ac.manchester.tornado.drivers.spirv.levelzero;
 
-/**
- * Fence descriptor
- */
-public class ZeFenceDescriptor extends LevelZeroDescriptor {
-
-    private int flags;
-
-    private long ptrZeFenceDesc;
-
-    public ZeFenceDescriptor() {
-        stype = Ze_Structure_Type.ZE_STRUCTURE_TYPE_FENCE_DESC;
+#define ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(value, cpp_target, type) \
+    if (value != -1) { \
+        cpp_target = reinterpret_cast<type>(value); \
     }
-
-    private native void materializeNative_ZeFenceDescriptor();
-
-    @Override
-    public void materialize() {
-        materializeNative_ZeFenceDescriptor();
-    }
-
-    public int getStype() {
-        return stype;
-    }
-
-    public long getpNext() {
-        return pNext;
-    }
-
-    public int getFlags() {
-        return flags;
-    }
-
-    public void setFlags(int flags) {
-        this.flags = flags;
-    }
-
-    public long getPtrZeFenceDesc() {
-        return ptrZeFenceDesc;
-    }
-}

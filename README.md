@@ -133,6 +133,7 @@ rem copyData.spv file expected in CWD
 .\scripts\kernelTimers.cmd
 .\scripts\transferTimers.cmd
 .\scripts\largeBuffers.cmd
+.\scripts\testZelloWorld.cmd
 ```
 
 ## Some Examples
