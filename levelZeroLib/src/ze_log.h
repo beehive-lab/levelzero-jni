@@ -55,9 +55,4 @@
         << std::endl;                                             \
     }
 
-#define ASSIGN_IF_NOT_MINUS_ONE(value, cpp_target, type) \
-    if (value != -1) { \
-        cpp_target = reinterpret_cast<type>(value); \
-    }
-
 #endif

@@ -29,6 +29,7 @@
 #include <memory>
 #include "ze_api.h"
 #include "ze_log.h"
+#include "ze_misc_macros.h"
 
 /*
  * Class:     uk_ac_manchester_tornado_drivers_spirv_levelzero_LevelZeroContext
@@ -98,7 +99,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jlong commandQueuePointer = env->GetLongField(javaCommandQueue, field);
 
     ze_command_queue_handle_t commandQueue;
-    ASSIGN_IF_NOT_MINUS_ONE(commandQueuePointer, commandQueue, ze_command_queue_handle_t);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(commandQueuePointer, commandQueue, ze_command_queue_handle_t);
 
     // Reconstruct commandQueueDescriptor
     ze_command_queue_desc_t cmdQueueDesc = {};
@@ -268,7 +269,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jfieldID field = env->GetFieldID(commandListClass, "ptrZeCommandListHandle", "J");
     jlong commandListPointer = env->GetLongField(commandListClass, field);
     ze_command_list_handle_t commandList = {};
-    ASSIGN_IF_NOT_MINUS_ONE(commandListPointer, commandList, ze_command_list_handle_t);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(commandListPointer, commandList, ze_command_list_handle_t);
 
     // Reconstruct command queue Descriptor
     ze_command_queue_desc_t commandQueueDesc = {};
@@ -330,9 +331,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jint pNext = env->GetLongField(javaCommandQueueDescriptor, field);
 #endif
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pNext, commandQueueDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pNext, commandQueueDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pNext, commandQueueDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pNext, commandQueueDesc.pNext, const void *);
 #endif
 
     field = env->GetFieldID(commanddescriptorClass, "ordinal", "J");
@@ -394,9 +395,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.ordinal = ordinalDeviceDesc;
     deviceDesc.flags = flagDeviceDesc;
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
 #endif
 
     jclass javaHostMemAllocDescClass = env->GetObjectClass(javaHostMemAllocDesc);
@@ -419,9 +420,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     hostDesc.stype = static_cast<ze_structure_type_t>(typeHostDesc);
     hostDesc.flags = flagsHostDesc;
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, const void *);
 #endif
 
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
@@ -474,9 +475,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.flags = flagDeviceDesc;
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
 #endif
 
     jclass javaHostMemAllocDescClass = env->GetObjectClass(javaHostMemAllocDesc);
@@ -500,9 +501,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     hostDesc.flags = flagsHostDesc;
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDesc.pNext, const void *);
 #endif
 
     ze_result_t result = zeMemAllocShared(context, &deviceDesc, &hostDesc, bufferSize, aligmnent, device, &buffer);
@@ -555,9 +556,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.flags = flagDeviceDesc;
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
 #endif
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
@@ -617,9 +618,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     deviceDesc.flags = flagDeviceDesc;
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextDeviceAlloc, deviceDesc.pNext, const void *);
 #endif
 
     ze_result_t result = zeMemAllocDevice(context, &deviceDesc, allocSize, alignment, device, &buffer);
@@ -693,7 +694,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
         jlong ptrModule = env->GetLongField(javaModuleClass, fieldPtr);
 
         ze_module_handle_t module = nullptr;
-        ASSIGN_IF_NOT_MINUS_ONE(ptrModule, module, ze_module_handle_t);
+        ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(ptrModule, module, ze_module_handle_t);
 
         ze_result_t result = zeModuleCreate(context, device, &moduleDesc, &module, &buildLog);
         LOG_ZE_JNI("zeModuleCreate", result);
@@ -831,9 +832,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     eventPoolDescriptor.stype = static_cast<ze_structure_type_t>(stype);
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pNext, eventPoolDescriptor.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pNext, eventPoolDescriptor.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pNext, eventPoolDescriptor.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pNext, eventPoolDescriptor.pNext, const void *);
 #endif
 
     eventPoolDescriptor.count = count;
@@ -877,7 +878,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
         std::cout << "[TornadoVM-JNI] Error, Java Event Pool Handler native pointer is null - Invoke zeEventPoolCreate before calling this function " << std::endl;
         return -1;
     }
-    ASSIGN_IF_NOT_MINUS_ONE(ptrEventPool, eventPool, ze_event_pool_handle_t);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(ptrEventPool, eventPool, ze_event_pool_handle_t);
 
     jclass klassEventDesc = env->GetObjectClass(javaEventDescriptor);
     field = env->GetFieldID(klassEventDesc, "stype", "I");
@@ -985,7 +986,7 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     jlong ptrBuffer = env->GetLongField(javaBufferClass, fieldBuffer);
 
     void* buffer = nullptr;
-    ASSIGN_IF_NOT_MINUS_ONE(ptrBuffer, buffer, void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(ptrBuffer, buffer, void *);
 
     jclass javaHostDescClass = env->GetObjectClass(javaHostMemAllocDesc);
     jfieldID fieldTypeDeviceDesc = env->GetFieldID(javaHostDescClass, "stype", "I");
@@ -1009,9 +1010,9 @@ JNIEXPORT jint JNICALL Java_uk_ac_manchester_tornado_drivers_spirv_levelzero_Lev
     hostDescriptor.pNext = nullptr;
 
 #ifdef _WIN32
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDescriptor.pNext, int64_t *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDescriptor.pNext, int64_t *);
 #else
-    ASSIGN_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDescriptor.pNext, const void *);
+    ASSIGN_POINTER_VALUE_IF_NOT_MINUS_ONE(pnextHostAlloc, hostDescriptor.pNext, const void *);
 #endif
 
     ze_result_t result = zeMemAllocHost(context, &hostDescriptor, allocSize, alignment, (void**) &buffer);
