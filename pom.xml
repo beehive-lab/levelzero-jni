@@ -6,7 +6,7 @@
 
   <groupId>beehive-lab</groupId>
   <artifactId>beehive-levelzero-jni</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
 
   <name>levelzero</name>
   <url>https://github.com/beehive-lab/levelzero-jni</url>

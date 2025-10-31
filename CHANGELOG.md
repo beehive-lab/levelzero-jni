@@ -1,3 +1,8 @@
+## Beehive LevelZero-JNI 0.1.5
+31/10/2025
+
+- Add Maven wrapper script: [commit](https://github.com/beehive-lab/levelzero-jni/commit/a272d6f483e7721f271b58d513486d76a995d690)
+
 ## Beehive LevelZero-JNI 0.1.4
 13/08/2024
 
@@ -25,7 +30,7 @@
 ## LevelZero-JNI 0.1.1
 10/03/2022
 
-- Buffer Allocation Fixed: [commit](https://github.com/beehive-lab/levelzero-jni/commit/26e5155dc349ff9db9a01fe6d9ec08104a0a5d70)
+- Buffer Allocation Fixed: [commit](https://github.com/beehive-lab/levelzero-jni/commit/26e5155dc349ff9db9a01fe6d9ec0.1.5a0a5d70)
 - `ZeMemAdvice` added
 - Functions `zeCommandListAppendMemoryPrefetch` and `zeCommandListAppendMemAdvise` supported
 - Javadoc improved
